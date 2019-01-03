@@ -11,13 +11,13 @@
 using namespace algorithms;
 
 namespace problem_solver {
-    template<class SearchableType,class StateType>
-    class SearcherSolver : public Solver<Searchable<SearchableType>,Solution<StateType>> {
-        Searcher<SearchableType> *searcher;
+    template<class StateType>
+    class SearcherSolver : public Solver<Searchable<StateType>,Solution<StateType>> {
+        Searcher<StateType> *searcher;
     public:
-        SearcherSolver(Searcher<SearchableType> *s) : searcher(s) {}
+        SearcherSolver(Searcher<StateType> *s) : searcher(s) {}
 
-        Solution<StateType> solve(Searchable<SearchableType> problem) override {
+        Solution<StateType>* solve(Searchable<StateType>* problem) override {
             return searcher->search(problem);
         }
     };

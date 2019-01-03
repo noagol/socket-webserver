@@ -14,7 +14,7 @@ namespace algorithms {
     template<class T>
     class Searcher {
     public:
-        virtual Solution<T> search(Searchable<T>) = 0;
+        virtual Solution<T> *search(Searchable<T> *searchable) = 0;
     };
 }
 

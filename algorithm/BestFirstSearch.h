@@ -10,18 +10,18 @@
 #include "BaseSearcher.h"
 
 namespace algorithms {
-    template<class T>
-    class BestFirstSearch : public BaseSearcher<T> {
+    template<class StateType>
+    class BestFirstSearch : public BaseSearcher<StateType> {
     public:
-        Solution<T> search(Searchable<T> searchable) override {
-            priority_queue<State<T>> open;
-            set<State<T>> openSet;
-            open.push(searchable.getInitialState());
-            openSet.insert(searchable.getInitialState());
-            set<State<T>> closed;
-            State<T> current;
-            vector<State<T>> successors;
-            typename vector<State<T>>::iterator it;
+        Solution<StateType>* search(Searchable<StateType>* searchable) override {
+            priority_queue <State<StateType>> open;
+            set <State<StateType>> openSet;
+            open.push(searchable->getInitialState());
+            openSet.insert(searchable->getInitialState());
+            set <State<StateType>> closed;
+            State<StateType> current;
+            vector<State<StateType>> successors;
+            typename vector<State<StateType>>::iterator it;
 
             do {
                 // Get next element
@@ -32,12 +32,12 @@ namespace algorithms {
                 closed.insert(current);
 
                 // Check if we reached the goal state
-                if (searchable.isGoalState(current)) {
+                if (searchable->isGoalState(current)) {
                     return getSolutionPath(current);
                 }
 
                 // Get next states
-                successors = searchable.getAllPossibleStates(current);
+                successors = searchable->getAllPossibleStates(current);
 
                 for (it = successors.begin(); it < successors.end(); it++) {
                     if (closed.find(it) == closed.end() || openSet.find(it) == openSet.end()) {
@@ -49,7 +49,7 @@ namespace algorithms {
             } while (!open.empty());
 
             // No solution found
-            return BaseSolution<T>();
+            return nullptr;
         }
 
     };

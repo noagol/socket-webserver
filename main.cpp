@@ -1,6 +1,5 @@
 #include <iostream>
-#include "problem_solver/Solver.h"
-#include "problem_solver/StringReverser.h"
+
 #include "problem_solver/SearcherSolver.h"
 #include "algorithm/BestFirstSearch.h"
 #include "helpers/Position.h"
@@ -15,10 +14,12 @@ int main() {
                                   {1, 5,  6, 4},
                                   {1, 20, 9, 4}};
     SearchableMatrix problem = SearchableMatrix(matrix);
-    SearcherSolver<SearchableMatrix, Position<int>> s =
-            SearcherSolver<SearchableMatrix, Position<int>>(new BestFirstSearch(problem));
+    SearcherSolver<Position<int>>
+            s = SearcherSolver<Position<int>>(new BestFirstSearch<Position<int>>());
 
-    std::cout << solver.solve("nkkjlj") << std::endl;
+    Solution<Position<int>> *sol = s.solve(&problem);
+
+    std::cout << sol << std::endl;
 
 
     return 0;

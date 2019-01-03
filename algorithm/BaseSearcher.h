@@ -16,7 +16,7 @@ namespace algorithms {
         BaseSearcher() {}
 
     protected:
-        Solution<T> getSolutionPath(State<T> state) {
+        Solution<T>* getSolutionPath(State<T> state) {
             vector<State<T>> path;
             int cost = 0;
 
@@ -30,7 +30,7 @@ namespace algorithms {
 
             reverse(path.begin(), path.end());
 
-            return BaseSolution<T>(path, cost);
+            return new BaseSolution<T>(path, cost);
         }
     };
 }

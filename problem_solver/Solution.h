@@ -7,18 +7,32 @@
 
 #include <list>
 #include "State.h"
+#include "string"
+#include "ostream"
+#include "vector"
 
 using namespace std;
 
 namespace problem_solver {
     template<class T>
     class Solution {
-        list<State<T>> path;
+        vector<State<T>> path;
         int totalCost;
     public:
-        virtual list<State<T>> getPath() = 0;
+        virtual vector<State<T>> getPath() = 0;
 
         virtual int getTotalCost() = 0;
+
+        friend ostream &operator<<(ostream &os, Solution& solution) {
+            vector<State<T>> solPath = solution.getPath();
+            typename vector<State<T>>::iterator it;
+            for (it = solPath.begin(); it != solPath.end(); it++) {
+                os << *it.getCost() << "|";
+            }
+            os << endl;
+
+            return os;
+        }
     };
 }
 

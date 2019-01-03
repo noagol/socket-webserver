@@ -10,7 +10,7 @@ namespace problem_solver {
     class State {
         T state;
         int cost;
-        State<T> parent;
+        State parent;
         bool hasParent;
     public:
         State() {}

@@ -14,8 +14,8 @@ using namespace std;
 namespace problem_solver {
     class StringReverser : public Solver<string, string> {
     public:
-        string solve(string problem) override {
-            reverse(problem.begin(), problem.end());
+        string* solve(string* problem) override {
+            reverse(problem->begin(), problem->end());
             return problem;
         }
 
