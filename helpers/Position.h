@@ -22,8 +22,12 @@ public:
         return y;
     }
 
-    bool equals(Position<T> other) {
+    bool equals(const Position<T> other) {
         return other.getX() == this->getX() && other.getY() == this->getY();
+    }
+
+    bool operator==(const Position<T> &right) {
+        return this->equals(right);
     }
 };
 

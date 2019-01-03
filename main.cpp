@@ -13,14 +13,17 @@ int main() {
                                   {4, 20, 5, 4},
                                   {1, 5,  6, 4},
                                   {1, 20, 9, 4}};
+//    vector<vector<int>> matrix = {{1, 20},
+//                                  {4, 20}};
     SearchableMatrix problem = SearchableMatrix(matrix);
     SearcherSolver<Position<int>>
             s = SearcherSolver<Position<int>>(new BestFirstSearch<Position<int>>());
 
     Solution<Position<int>> *sol = s.solve(&problem);
 
-    std::cout << sol << std::endl;
+    std::cout << *sol << std::endl;
 
+    delete (sol);
 
     return 0;
 }

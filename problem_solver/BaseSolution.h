@@ -12,18 +12,18 @@
 namespace problem_solver {
     template<class T>
     class BaseSolution : public Solution<T> {
-        list<State<T>> path;
+        vector<State<T>> path;
         int totalCost;
     public:
         BaseSolution() : path(), totalCost(0), Solution<T>() {}
 
-        BaseSolution(list<State<T>> p, int cost) : path(p), totalCost(cost) {}
+        BaseSolution(vector<State<T>> p, int cost) : path(p), totalCost(cost) {}
 
         void addState(State<T> state) {
             path.push_back(state);
         }
 
-        virtual list<State<T>> getPath() override {
+        virtual vector<State<T> > getPath() override {
             return path;
         }
 

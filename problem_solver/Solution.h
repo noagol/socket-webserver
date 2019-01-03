@@ -23,11 +23,11 @@ namespace problem_solver {
 
         virtual int getTotalCost() = 0;
 
-        friend ostream &operator<<(ostream &os, Solution& solution) {
+        friend ostream &operator<<(ostream &os, Solution &solution) {
             vector<State<T>> solPath = solution.getPath();
             typename vector<State<T>>::iterator it;
             for (it = solPath.begin(); it != solPath.end(); it++) {
-                os << *it.getCost() << "|";
+                os << (*it).getCost() << "|";
             }
             os << endl;
 

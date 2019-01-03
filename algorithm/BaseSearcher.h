@@ -15,23 +15,6 @@ namespace algorithms {
     public:
         BaseSearcher() {}
 
-    protected:
-        Solution<T>* getSolutionPath(State<T> state) {
-            vector<State<T>> path;
-            int cost = 0;
-
-            path.push_back(state);
-
-            while (state.doesHaveParent()) {
-                state = state.getParent();
-                path.push_back(state);
-                cost += state.getCost();
-            }
-
-            reverse(path.begin(), path.end());
-
-            return new BaseSolution<T>(path, cost);
-        }
     };
 }
 
