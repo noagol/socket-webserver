@@ -5,12 +5,17 @@
 #ifndef SERVER_SIDE_PROJECT_POSITION_H
 #define SERVER_SIDE_PROJECT_POSITION_H
 
+#include "ostream"
+#include "StringHelpers.h"
+
+using namespace std;
+
 template<class T>
 class Position {
     T x;
     T y;
 public:
-    Position(){}
+    Position() {}
 
     Position(T xPos, T yPos) : x(xPos), y(yPos) {}
 
@@ -28,6 +33,29 @@ public:
 
     bool operator==(const Position<T> &right) {
         return this->equals(right);
+    }
+
+    friend ostream &operator<<(ostream &os, Position &position) {
+        os << "(" << position.getX() << "," << position.getY() << ")";
+        return os;
+    }
+
+    friend istream &operator>>(istream &os, Position &position) {
+        string input;
+        os >> input;
+
+        // Split
+        vector<string> spl = split(&input, ',');
+
+        // Turn to streams
+        istringstream x{spl.at(0).substr(1)};
+        istringstream y{spl.at(1).substr(0, spl.at(0).size() - 1)};
+
+        // Write to object
+        x >> position.x;
+        y >> position.y;
+
+        return os;
     }
 };
 

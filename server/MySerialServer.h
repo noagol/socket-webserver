@@ -27,14 +27,14 @@ namespace server_side {
         MySerialServer() : BaseServer() {}
 
 
-        void open(int port) override {
+        void open(int port, ClientHandler *clientHandler) override {
             // validate
             if (1 > port || port > 65535) {
                 throw invalid_argument(format("Port value out of range: %d", port));
             }
 
             // Run the server in new thread
-            thread serverThread(runServer, port);
+            thread serverThread(runServer, port, clientHandler);
             serverThread.detach();
         }
 
@@ -49,7 +49,7 @@ namespace server_side {
          * @param bindTable the bind table
          * @param symbolTable the symbol table
          */
-        static void runServer(int port) {
+        static void runServer(int port, ClientHandler *clientHandler) {
             int sockfd, newsockfd, portno, clilen;
             char buffer[1024];
             struct sockaddr_in serv_addr, cli_addr;
@@ -65,7 +65,7 @@ namespace server_side {
 
             // Set timeout // TODO: CHECK ACCEPT ENDS
             struct timeval tv;
-            tv.tv_sec = 150;  /* 150 Secs Timeout */
+            tv.tv_sec = 10;  /* 150 Secs Timeout */
             setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (struct timeval *) &tv, sizeof(struct timeval));
 
 
@@ -89,21 +89,19 @@ namespace server_side {
             listen(sockfd, 5);
             clilen = sizeof(cli_addr);
 
-            // Start client handler
-            MyTestClientHandler clientHandler = MyTestClientHandler(new StringReverser());
-
             // Update variables
             while (!shouldStop) {
                 // Accept actual connection from the client
                 newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, (socklen_t *) &clilen); // TODO: ADD TIMEOUT
-                if (newsockfd < 0) {
-                    perror("ERROR on accept");
-                    close(sockfd);
-                    exit(1);
+
+                if (newsockfd == -1) {
+                    // No one accepted
+                    continue;
                 }
 
+
                 // Client handler
-                clientHandler.handleClient(newsockfd, cout);
+                clientHandler->handleClient(newsockfd, cout);
 
 
                 // Close the socket

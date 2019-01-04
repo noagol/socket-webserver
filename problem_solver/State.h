@@ -6,6 +6,7 @@
 #define SERVER_SIDE_PROJECT_STATE_H
 
 #include <iostream>
+#include "StringHelpers.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ namespace problem_solver {
             return state;
         }
 
-        int getCost() const{
+        int getCost() const {
             return cost;
         }
 
@@ -42,8 +43,32 @@ namespace problem_solver {
         bool operator==(State &right) {
             return state == right.getState();
         }
+
+        friend ostream &operator<<(ostream &os, State &st) {
+            os << st.getCost() << "," << st.getState();
+            return os;
+        }
+
+        friend istream &operator>>(istream &os, State &st) {
+            string input;
+            os >> input;
+
+            // Split
+            vector<string> spl = split(&input, ',');
+
+            // Turn to streams
+            istringstream c{spl.at(0)};
+            istringstream s{spl.at(1)};
+
+            // Write to object
+            c >> st.cost;
+            s >> st.state;
+
+            return os;
+        }
     };
 
+    // Comparator
     template<class T>
     struct CompareState : public binary_function<State<T> *, State<T> *, bool> {
         bool operator()(const State<T> *lhs, const State<T> *rhs) const {

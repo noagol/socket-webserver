@@ -6,7 +6,7 @@
 #define SERVER_SIDE_PROJECT_BASESEARCHER_H
 
 #include "Searcher.h"
-#include "../problem_solver/BaseSolution.h"
+#include "SearchSolution.h"
 
 namespace algorithms {
 

@@ -10,33 +10,21 @@
 #include "string"
 #include "ostream"
 #include "vector"
+#include "../helpers/StringHelpers.h"
 
 using namespace std;
 
 namespace problem_solver {
     template<class T>
     class Solution {
-        vector<State<T>> path;
-        int totalCost;
     public:
         virtual vector<State<T>> getPath() = 0;
 
         virtual int getTotalCost() = 0;
 
-        friend ostream &operator<<(ostream &os, Solution &solution) {
-            vector<State<T>> solPath = solution.getPath();
-            typename vector<State<T>>::iterator it;
-            for (it = solPath.begin(); it != solPath.end(); it++) {
-                os << (*it).getCost() << "|";
-            }
-            os << endl;
+        friend ostream &operator<<(ostream &os, Solution &solution);
 
-            return os;
-        }
-
-        virtual ~Solution() {
-
-        }
+        virtual ~Solution() {}
     };
 }
 

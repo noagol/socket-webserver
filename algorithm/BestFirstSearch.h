@@ -75,7 +75,7 @@ namespace algorithms {
 
             reverse(path.begin(), path.end());
 
-            return new BaseSolution<StateType>(path, cost);
+            return new SearchSolution<StateType>(path, cost);
         }
 
     };
