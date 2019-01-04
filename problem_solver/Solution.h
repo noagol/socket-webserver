@@ -33,6 +33,10 @@ namespace problem_solver {
 
             return os;
         }
+
+        virtual ~Solution() {
+
+        }
     };
 }
 

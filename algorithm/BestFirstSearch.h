@@ -20,7 +20,7 @@ namespace algorithms {
         BestFirstSearch() : BaseSearcher<StateType>() {}
 
         Solution<StateType> *search(Searchable<StateType> *searchable) override {
-            priority_queue<State<StateType> *> open;
+            priority_queue<State<StateType> *, vector<State<StateType> *>, CompareState<StateType>> open;
             PointerSet<State<StateType>> openSet;
             open.push(searchable->getInitialState());
             openSet.add(searchable->getInitialState());
@@ -48,7 +48,7 @@ namespace algorithms {
                 successors = searchable->getAllPossibleStates(current);
 
                 for (it = successors.begin(); it < successors.end(); it++) {
-                    if (!closed.exists(*it) || !openSet.exists(*it)) {
+                    if (!closed.exists(*it) && !openSet.exists(*it)) {
                         open.push(*it);
                         openSet.add(*it);
                     }
@@ -69,7 +69,7 @@ namespace algorithms {
 
             while (state->getParent() != nullptr) {
                 state = state->getParent();
-                path.push_back(*state); // TODO: May want to copy all pointers to other place on heap
+                path.push_back(*state);
                 cost += state->getCost();
             }
 

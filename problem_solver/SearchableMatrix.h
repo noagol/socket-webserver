@@ -48,11 +48,11 @@ namespace problem_solver {
 
             vector<State<Position<int>> *> states;
             State<Position<int>> *state;
-//            if (canMoveUp) {
-//                state = new State<Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX()), current);
-//                states.push_back(state);
-//                allocatedMemory.push_back(state);
-//            }
+            if (canMoveUp) {
+                state = new State<Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX()), current);
+                states.push_back(state);
+                allocatedMemory.push_back(state);
+            }
 
             if (canMoveDown) {
                 state = new State<Position<int>>(Position<int>(curr.getY() + 1, curr.getX()),
@@ -61,11 +61,11 @@ namespace problem_solver {
                 allocatedMemory.push_back(state);
             }
 
-//            if (canMoveLeft) {
-//                state = new State<Position<int>>(curr, matrix.at(curr.getY()).at(curr.getX() - 1), current);
-//                states.push_back(state);
-//                allocatedMemory.push_back(state);
-//            }
+            if (canMoveLeft) {
+                state = new State<Position<int>>(curr, matrix.at(curr.getY()).at(curr.getX() - 1), current);
+                states.push_back(state);
+                allocatedMemory.push_back(state);
+            }
 
             if (canMoveRight) {
                 state = new State<Position<int>>(Position<int>(curr.getY(), curr.getX() + 1),
@@ -74,23 +74,23 @@ namespace problem_solver {
                 allocatedMemory.push_back(state);
             }
 
-//            if (canMoveUp && canMoveLeft) {
-//                state = new State<Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX() - 1), current);
-//                states.push_back(state);
-//                allocatedMemory.push_back(state);
-//            }
+            if (canMoveUp && canMoveLeft) {
+                state = new State<Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX() - 1), current);
+                states.push_back(state);
+                allocatedMemory.push_back(state);
+            }
 
-//            if (canMoveUp && canMoveRight) {
-//                state = new State<Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX() + 1), current);
-//                states.push_back(state);
-//                allocatedMemory.push_back(state);
-//            }
+            if (canMoveUp && canMoveRight) {
+                state = new State<Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX() + 1), current);
+                states.push_back(state);
+                allocatedMemory.push_back(state);
+            }
 
-//            if (canMoveDown && canMoveLeft) {
-//                state = new State<Position<int>>(curr, matrix.at(curr.getY() + 1).at(curr.getX() - 1), current);
-//                states.push_back(state);
-//                allocatedMemory.push_back(state);
-//            }
+            if (canMoveDown && canMoveLeft) {
+                state = new State<Position<int>>(curr, matrix.at(curr.getY() + 1).at(curr.getX() - 1), current);
+                states.push_back(state);
+                allocatedMemory.push_back(state);
+            }
 
             if (canMoveDown && canMoveRight) {
                 state = new State<Position<int>>(Position<int>(curr.getY() + 1, curr.getX() + 1),
