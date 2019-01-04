@@ -7,15 +7,15 @@
 
 #include "iostream"
 #include "BaseServer.h"
-#include "StringHelpers.h"
+#include "../helpers/StringHelpers.h"
 #include <unistd.h>
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <netinet/in.h>
 #include <thread>
 #include <string.h>
-#include <MyTestClientHandler.h>
-#include <StringReverser.h>
+#include "../client/MyTestClientHandler.h"
+#include "../problem_solver/StringReverser.h"
 
 using namespace client_side;
 using namespace std;

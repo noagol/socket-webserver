@@ -5,7 +5,7 @@
 #ifndef SERVER_SIDE_PROJECT_SERVER_H
 #define SERVER_SIDE_PROJECT_SERVER_H
 
-#include <ClientHandler.h>
+#include "../client/ClientHandler.h"
 
 using namespace client_side;
 

@@ -12,7 +12,7 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <netinet/in.h>
-#include <StringHelpers.h>
+#include "../helpers/StringHelpers.h"
 
 using namespace std;
 

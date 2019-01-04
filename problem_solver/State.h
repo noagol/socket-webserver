@@ -6,7 +6,7 @@
 #define SERVER_SIDE_PROJECT_STATE_H
 
 #include <iostream>
-#include "StringHelpers.h"
+#include "../helpers/StringHelpers.h"
 
 using namespace std;
 
@@ -45,7 +45,7 @@ namespace problem_solver {
         }
 
         friend ostream &operator<<(ostream &os, State &st) {
-            os << st.getCost() << "," << st.getState();
+            os << st.cost << "/" << st.state;
             return os;
         }
 
@@ -54,7 +54,8 @@ namespace problem_solver {
             os >> input;
 
             // Split
-            vector<string> spl = split(&input, ',');
+            vector<string> spl = split(&input,
+                    '/');
 
             // Turn to streams
             istringstream c{spl.at(0)};

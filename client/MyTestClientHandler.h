@@ -7,6 +7,7 @@
 
 #include "BaseClientHandler.h"
 #include "../problem_solver/Solver.h"
+#include "../cache/FileCacheManager.h"
 
 
 using namespace problem_solver;
@@ -15,30 +16,41 @@ using namespace std;
 namespace client_side {
     class MyTestClientHandler : public BaseClientHandler {
         Solver<string, string> *solver;
+        FileCacheManager<string> cacheManager;
     public:
-        MyTestClientHandler(Solver<string, string> *s) : solver(s) {}
+        MyTestClientHandler(Solver<string, string> *s) : solver(s), cacheManager("test_client_handler.txt") {}
 
         void handleClient(int inputSocket, ostream &output) override {
-            string input;
-
-            input = readValuesToBuffer(inputSocket);
+            string problem;
+            string *solution;
+            string *cached;
+            problem = readValuesToBuffer(inputSocket);
             do {
-                if (input.empty()) {
+                if (problem.empty()) {
+                    write(inputSocket, "-", 1);
+                    problem = readValuesToBuffer(inputSocket);
                     continue;
                 }
 
-                // Change string inplace
-                solver->solve(&input);
+                // Search in cache
+                solution = cacheManager.find(problem);
+                if (solution == nullptr) {
+                    // Not found on cache
+                    // Solve
+                    solution = solver->solve(&problem);
+                    // Add to cache
+                    cacheManager.add(problem, solution);
+                }
 
                 // Print output
-                output << input << endl;
+                output << problem << "|" << *solution << endl;
 
                 // Write back to socket
-                write(inputSocket, input.c_str(), input.size());
+                write(inputSocket, solution->c_str(), solution->size());
 
                 // Read one more line
-                input = readValuesToBuffer(inputSocket);
-            } while (input != "end");
+                problem = readValuesToBuffer(inputSocket);
+            } while (problem != "end");
 
             close(inputSocket);
         }

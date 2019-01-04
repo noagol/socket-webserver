@@ -59,25 +59,6 @@ namespace algorithms {
             // No solution found
             return nullptr;
         }
-
-        // TODO: MOVE ONE LEVEL UP
-        Solution<StateType> *getSolutionPath(State<StateType> *state) {
-            vector<State<StateType>> path;
-            int cost = 0;
-
-            path.push_back(*state);
-
-            while (state->getParent() != nullptr) {
-                state = state->getParent();
-                path.push_back(*state);
-                cost += state->getCost();
-            }
-
-            reverse(path.begin(), path.end());
-
-            return new SearchSolution<StateType>(path, cost);
-        }
-
     };
 }
 #endif //SERVER_SIDE_PROJECT_BESTFIRSTSEARCH_H

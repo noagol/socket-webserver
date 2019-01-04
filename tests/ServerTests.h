@@ -6,7 +6,7 @@
 #define SERVER_SIDE_PROJECT_SERVERTESTS_H
 
 
-#include <MySerialServer.h>
+#include "../server/MySerialServer.h"
 
 using namespace server_side;
 
@@ -17,7 +17,7 @@ public:
         MyTestClientHandler clientHandler = MyTestClientHandler(new StringReverser());
 
         MySerialServer server = MySerialServer();
-        server.open(12345, &clientHandler);
+        server.open(12346, &clientHandler);
 
         this_thread::sleep_for(std::chrono::milliseconds((unsigned int) 200000000000000000));
     }

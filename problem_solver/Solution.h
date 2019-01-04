@@ -18,14 +18,23 @@ namespace problem_solver {
     template<class T>
     class Solution {
     public:
-        virtual vector<State<T>> getPath() = 0;
+        virtual vector<State<T>*> getPath() const = 0;
 
-        virtual int getTotalCost() = 0;
+        virtual int getTotalCost() const = 0;
 
-        friend ostream &operator<<(ostream &os, Solution &solution);
+        template<class V>
+        friend ostream &operator<<(ostream &os, const Solution<V> &solution) {
+            solution.print(os); // delegate the work to a polymorphic member function.
+            return os;
+        }
 
         virtual ~Solution() {}
+
+    protected:
+        virtual void print(ostream &o) const = 0;
     };
+
+
 }
 
 #endif //SERVER_SIDE_PROJECT_SOLUTION_H

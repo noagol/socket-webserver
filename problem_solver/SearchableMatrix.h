@@ -17,6 +17,17 @@ namespace problem_solver {
         vector<vector<int>> matrix;
         vector<State<Position<int>> *> allocatedMemory;
     public:
+        SearchableMatrix() : matrix(), allocatedMemory() {
+            goalState = new State<Position<int>>(Position<int>(0, 0),
+                                                 0,
+                                                 nullptr);
+            initialState = new State<Position<int>>(Position<int>(0, 0),
+                                                    0,
+                                                    nullptr);
+            allocatedMemory.push_back(goalState);
+            allocatedMemory.push_back(initialState);
+        }
+
         SearchableMatrix(vector<vector<int>> m) : matrix(m), allocatedMemory() {
             goalState = new State<Position<int>>(Position<int>(m.size() - 1, m.at(0).size() - 1),
                                                  m.at(m.size() - 1).at(m.at(0).size() - 1),
@@ -26,6 +37,10 @@ namespace problem_solver {
                                                     nullptr);
             allocatedMemory.push_back(goalState);
             allocatedMemory.push_back(initialState);
+        }
+
+        vector<vector<int>> getMatrix() const {
+            return matrix;
         }
 
         State<Position<int>> *getInitialState() override {
@@ -108,12 +123,90 @@ namespace problem_solver {
             }
         }
 
+        friend ostream &operator<<(ostream &os, SearchableMatrix &searchable) {
+            typename vector<vector<int>>::iterator it1;
+            typename vector<int>::iterator it2;
+
+            // Write rows
+            for (it1 = searchable.matrix.begin(); it1 != searchable.matrix.end() - 1; it1++) {
+                for (it2 = (*it1).begin(); it2 != ((*it1).end() - 1); it2++) {
+                    os << *it2 << ",";
+                }
+                os << *it2 << "|";
+            }
+
+            // Write last row
+            for (it2 = (*it1).begin(); it2 != ((*it1).end() - 1); it2++) {
+                os << *it2 << ",";
+            }
+            os << *it2;
+
+            return os;
+        }
+
+        friend istream &operator>>(istream &os, SearchableMatrix &searchable) {
+            string input;
+            os >> input;
+
+            // Split
+            vector<string> rows = split(&input, '|');
+            vector<string> row;
+            string rowStr;
+
+            int i, j;
+
+            // Write rows
+            for (i = 0; i < rows.size(); i++) {
+                row = split(&rows.at(i), ',');
+                searchable.matrix.push_back(vector<int>());
+
+                for (j = 0; j < row.size(); j++) {
+                    searchable.matrix.at(i).push_back(stoi(row.at(j)));
+                }
+            }
+
+            searchable.goalState = new State<Position<int>>(
+                    Position<int>(searchable.matrix.size() - 1, searchable.matrix.at(0).size() - 1),
+                    searchable.matrix.at(searchable.matrix.size() - 1).at(searchable.matrix.at(0).size() - 1),
+                    nullptr);
+            searchable.initialState = new State<Position<int>>(Position<int>(0, 0),
+                                                               searchable.matrix.at(0).at(0),
+                                                               nullptr);
+            searchable.allocatedMemory.push_back(searchable.goalState);
+            searchable.allocatedMemory.push_back(searchable.initialState);
+
+            return os;
+        }
+
         ~SearchableMatrix() {
             typename vector<State<Position<int>> *>::iterator it;
             for (it = allocatedMemory.begin(); it != allocatedMemory.end(); it++) {
                 delete (*it);
             }
         }
+
+    protected:
+        void print(ostream &os) const override {
+            typename vector<vector<int>>::iterator it1;
+            typename vector<int>::iterator it2;
+
+            vector<vector<int>> m = getMatrix();
+
+            // Write rows
+            for (it1 = m.begin(); it1 != m.end() - 1; it1++) {
+                for (it2 = (*it1).begin(); it2 != ((*it1).end() - 1); it2++) {
+                    os << *it2 << ",";
+                }
+                os << *it2 << "|";
+            }
+
+            // Write last row
+            for (it2 = (*it1).begin(); it2 != ((*it1).end() - 1); it2++) {
+                os << *it2 << ",";
+            }
+            os << *it2;
+        }
+
     };
 }
 
