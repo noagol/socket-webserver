@@ -8,8 +8,13 @@ using namespace server_side;
 
 int main() {
 //    AlgorithmTests::bestFirstSearch1();
+//    AlgorithmTests::BFS1();
+//    AlgorithmTests::DFS1();
+//    AlgorithmTests::AStar1();
+    AlgorithmTests::AStar2();
+
 //    AlgorithmTests::loadTest1();
 
-    ServerTests::simpleServer1();
+//    ServerTests::simpleServer1();
     return 0;
 }

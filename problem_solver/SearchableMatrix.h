@@ -7,15 +7,17 @@
 
 #include <vector>
 #include <stdexcept>
+#include <cmath>
 #include "Searchable.h"
 #include "../helpers/Position.h"
 
 namespace problem_solver {
     class SearchableMatrix : public Searchable<Position<int>> {
-        State<Position<int>> *goalState;
-        State<Position<int>> *initialState;
+        State <Position<int>> *goalState;
+        State <Position<int>> *initialState;
         vector<vector<int>> matrix;
-        vector<State<Position<int>> *> allocatedMemory;
+        vector<State < Position<int>> *>
+        allocatedMemory;
     public:
         SearchableMatrix() : matrix(), allocatedMemory() {
             goalState = new State<Position<int>>(Position<int>(0, 0),
@@ -43,15 +45,23 @@ namespace problem_solver {
             return matrix;
         }
 
-        State<Position<int>> *getInitialState() override {
+        State <Position<int>> *getInitialState() override {
             return initialState;
         }
 
-        bool isGoalState(State<Position<int>> *state) override {
+        double estimateDistanceToGoal(State <Position<int>> *state) override {
+            double x = abs((state->getState().getX() - goalState->getState().getX()) * 2);
+            double y = abs((state->getState().getY() - goalState->getState().getY()) * 2);
+            return sqrt(x + y);
+        }
+
+        bool isGoalState(State <Position<int>> *state) override {
             return state->getState().equals(goalState->getState());
         }
 
-        vector<State<Position<int>> *> getAllPossibleStates(State<Position<int>> *current) override {
+        vector<State < Position<int>> *>
+        getAllPossibleStates(State<Position<int>>
+        *current) override {
             Position<int> curr = current->getState();
 
             validatePosition(curr);
@@ -61,55 +71,56 @@ namespace problem_solver {
             bool canMoveLeft = curr.getX() > 0;
             bool canMoveRight = curr.getX() < matrix.at(0).size() - 1;
 
-            vector<State<Position<int>> *> states;
-            State<Position<int>> *state;
+            vector<State < Position<int>> *> states;
+            State < Position<int>>
+            *state;
             if (canMoveUp) {
-                state = new State<Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX()), current);
+                state = new State <Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX()), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
 
             if (canMoveDown) {
-                state = new State<Position<int>>(Position<int>(curr.getY() + 1, curr.getX()),
-                                                 matrix.at(curr.getY() + 1).at(curr.getX()), current);
+                state = new State <Position<int>>(Position<int>(curr.getY() + 1, curr.getX()),
+                                                  matrix.at(curr.getY() + 1).at(curr.getX()), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
 
             if (canMoveLeft) {
-                state = new State<Position<int>>(curr, matrix.at(curr.getY()).at(curr.getX() - 1), current);
+                state = new State <Position<int>>(curr, matrix.at(curr.getY()).at(curr.getX() - 1), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
 
             if (canMoveRight) {
-                state = new State<Position<int>>(Position<int>(curr.getY(), curr.getX() + 1),
-                                                 matrix.at(curr.getY()).at(curr.getX() + 1), current);
+                state = new State <Position<int>>(Position<int>(curr.getY(), curr.getX() + 1),
+                                                  matrix.at(curr.getY()).at(curr.getX() + 1), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
 
             if (canMoveUp && canMoveLeft) {
-                state = new State<Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX() - 1), current);
+                state = new State <Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX() - 1), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
 
             if (canMoveUp && canMoveRight) {
-                state = new State<Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX() + 1), current);
+                state = new State <Position<int>>(curr, matrix.at(curr.getY() - 1).at(curr.getX() + 1), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
 
             if (canMoveDown && canMoveLeft) {
-                state = new State<Position<int>>(curr, matrix.at(curr.getY() + 1).at(curr.getX() - 1), current);
+                state = new State <Position<int>>(curr, matrix.at(curr.getY() + 1).at(curr.getX() - 1), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
 
             if (canMoveDown && canMoveRight) {
-                state = new State<Position<int>>(Position<int>(curr.getY() + 1, curr.getX() + 1),
-                                                 matrix.at(curr.getY() + 1).at(curr.getX() + 1), current);
+                state = new State <Position<int>>(Position<int>(curr.getY() + 1, curr.getX() + 1),
+                                                  matrix.at(curr.getY() + 1).at(curr.getX() + 1), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
@@ -177,6 +188,7 @@ namespace problem_solver {
 
             return os;
         }
+
 
         ~SearchableMatrix() {
             typename vector<State<Position<int>> *>::iterator it;

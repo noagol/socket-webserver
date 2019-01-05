@@ -28,6 +28,10 @@ public:
         return false;
     }
 
+    bool empty() {
+        return s.empty();
+    }
+
     void remove(T *item) {
         s.erase(item);
     }

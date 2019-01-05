@@ -37,7 +37,7 @@ namespace problem_solver {
         }
 
         bool operator<(const State &right) {
-            return this->getCost() < right.getCost();
+            return this->state < right.state;
         }
 
         bool operator==(State &right) {
@@ -55,7 +55,7 @@ namespace problem_solver {
 
             // Split
             vector<string> spl = split(&input,
-                    '/');
+                                       '/');
 
             // Turn to streams
             istringstream c{spl.at(0)};

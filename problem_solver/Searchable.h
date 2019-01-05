@@ -18,6 +18,8 @@ namespace problem_solver {
 
         virtual bool isGoalState(State <T> *state) = 0;
 
+        virtual double estimateDistanceToGoal(State<T>* state) = 0;
+
         virtual vector<State < T>*>getAllPossibleStates(State<T>* state) = 0;
 
         template<class V>

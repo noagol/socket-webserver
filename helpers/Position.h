@@ -35,6 +35,10 @@ public:
         return this->equals(right);
     }
 
+    bool operator<(const Position<T> &right) {
+        return !(this->getX() == right.getX() || this->getY() == right.getY());
+    }
+
     friend ostream &operator<<(ostream &os, Position &position) {
         os << "(" << position.getX() << "," << position.getY() << ")";
         return os;

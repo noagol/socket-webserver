@@ -41,7 +41,7 @@ namespace algorithms {
 
                 // Check if we reached the goal state
                 if (searchable->isGoalState(current)) {
-                    return getSolutionPath(current);
+                    return this->getSolutionPath(current);
                 }
 
                 // Get next states
