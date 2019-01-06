@@ -7,8 +7,8 @@
 
 #include "BaseSearcher.h"
 #include <map>
-#include <PointerSet.h>
 #include <queue>
+#include <Set.h>
 
 namespace algorithms {
     template<class StateType>
@@ -17,10 +17,24 @@ namespace algorithms {
     public:
         AStar() {}
 
-        struct Vertex {
+        class Vertex {
+        public:
             State<StateType> *state;
             // f = g + h
             double total, dFromStart, estimatedToEnd;
+
+            Vertex() {}
+
+            Vertex(State<StateType> *s, double t, double d, double e) : state(s), total(t), dFromStart(d),
+                                                                        estimatedToEnd(e) {}
+
+            bool operator<(const Vertex &right) const {
+                return *(this->state) < *(right.state);
+            }
+
+            bool operator==(const Vertex &right) const {
+                return *(this->state) == *(right.state);
+            }
         };
 
         // Comparator
@@ -30,76 +44,76 @@ namespace algorithms {
             }
         };
 
-        // Comparator
-        struct EqualityVertex : public binary_function<Vertex, Vertex, bool> {
-            bool operator()(const Vertex lhs, const Vertex rhs) const {
-                return *lhs.state < *rhs.state;
-            }
-        };
+//         //Comparator
+//        struct EqualityVertex : public binary_function<Vertex, Vertex, bool> {
+//            bool operator()(const Vertex lhs, const Vertex rhs) const {
+//                return *(lhs.state) < *(rhs.state);
+//            }
+//        };
 
         Solution<StateType> *search(Searchable<StateType> *searchable) override {
             // Priority queue by total value
             priority_queue<Vertex, vector<Vertex>, CompareVertex> Q;
 
             // Sets for handle visited nodes
-            set<Vertex, EqualityVertex> open;
-            set<Vertex, EqualityVertex> closed;
+            Set<StateType, Vertex> open;
+            Set<StateType, Vertex> closed;
 
             // Get initial state
             State<StateType> *initialState = searchable->getInitialState();
-            Vertex initial = {initialState, 0, 0, searchable->estimateDistanceToGoal(initialState)};
-            open.insert(initial); // Add to open set
+            Vertex initial = Vertex(initialState, 0, 0, searchable->estimateDistanceToGoal(initialState));
+            open.insert(initial.state->getState(), initial); // Add to open set
             Q.push(initial); // Add to priority queue
 
             // Current nodes
             Vertex u, v;
             vector<State<StateType> *> adj;
             typename vector<State<StateType> *>::iterator it;
-            typename set<Vertex>::iterator w_it;
 
             while (!open.empty()) {
                 // Get lowest total vertex
                 u = Q.top();
                 Q.pop();
 
-                open.erase(u);
+                if (closed.exists(u.state->getState())) {
+                    continue;
+                }
+
+                if (searchable->isGoalState(u.state)) {
+                    // Reached goal state
+                    return this->getSolutionPath(u.state);
+                }
+
+                // Remove from open and add to closed
+                open.remove(u.state->getState());
+                closed.insert(u.state->getState(), u);
 
                 // Get next states
                 adj = searchable->getAllPossibleStates(u.state);
                 for (it = adj.begin(); it != adj.end(); it++) {
+                    if (closed.exists((*it)->getState())) {
+                        continue;
+                    }
+
                     // Set as vertex
                     v.state = *it;
                     v.dFromStart = u.dFromStart + v.state->getCost();
                     v.estimatedToEnd = searchable->estimateDistanceToGoal(*it);
                     v.total = v.dFromStart + v.estimatedToEnd;
 
-                    if (searchable->isGoalState(*it)) {
-                        // Reached goal state
-                        return this->getSolutionPath(*it);
-                    } else {
-                        // Search in open
-                        w_it = open.find(v);
-                        if (w_it != open.end() && (*w_it).total < v.total) {
-                            // Check if already in open with lower total
-                            continue;
-                        }
+                    // Search in open
+                    if (!open.exists(v.state->getState())) {
+                        // Not in open and not in closed
+                        open.insert(v.state->getState(), v);
+                        Q.push(v);
+                    }
 
-                        w_it = closed.find(v);
-                        if (w_it != closed.end() && (*w_it).total < v.total) {
-                            // Check if already in closed with lower total
-                            continue;
-                        } else {
-                            open.insert(v);
-                            Q.push(v);
-                            if (w_it != closed.end()) {
-                                closed.erase(*w_it);
-                            }
-                        }
+                    else if (open.find(v.state->getState()).dFromStart > v.dFromStart) {
+                         //The vertex is found in open with better values
+                        open.insert(v.state->getState(), v);
                     }
                 }
 
-                // Add u to closed list
-                closed.insert(u);
             }
 
             // No solution found

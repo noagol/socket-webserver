@@ -38,6 +38,7 @@ namespace algorithms {
                 cost += copiedState->getCost();
             }
 
+
             // Reverse the path
             reverse(path.begin(), path.end());
 

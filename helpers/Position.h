@@ -27,16 +27,16 @@ public:
         return y;
     }
 
-    bool equals(const Position<T> other) {
+    bool equals(const Position<T> other) const {
         return other.getX() == this->getX() && other.getY() == this->getY();
     }
 
-    bool operator==(const Position<T> &right) {
+    bool operator==(const Position<T> &right) const{
         return this->equals(right);
     }
 
-    bool operator<(const Position<T> &right) {
-        return !(this->getX() == right.getX() || this->getY() == right.getY());
+    bool operator<(const Position<T> &right) const {
+        return !(this->getX() == right.getX() && this->getY() == right.getY());
     }
 
     friend ostream &operator<<(ostream &os, Position &position) {
@@ -62,5 +62,27 @@ public:
         return os;
     }
 };
+
+namespace std {
+
+    template <class T>
+    struct hash<Position<T>>
+    {
+        std::size_t operator()(const Position<T>& k) const
+        {
+            using std::size_t;
+            using std::hash;
+            using std::string;
+
+            // Compute individual hash values for first,
+            // second and third and combine them using XOR
+            // and bit shifting:
+
+            return ((hash<int>()(k.getX()) << 1)) >> 1
+                   ^ (hash<int>()(k.getY()) << 1);
+        }
+    };
+
+}
 
 #endif //SERVER_SIDE_PROJECT_POSITION_H

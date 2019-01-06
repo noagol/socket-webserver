@@ -76,6 +76,13 @@ namespace problem_solver {
             return lhs->getCost() > rhs->getCost();
         }
     };
+
+    template<class T>
+    struct StateComparator : public binary_function<State<T>, State<T>, bool> {
+        bool operator()(const State<T>& lhs, const State<T>& rhs) const {
+            return lhs.getState() < rhs.getState();
+        }
+    };
 }
 
 
