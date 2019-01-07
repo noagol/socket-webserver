@@ -25,10 +25,10 @@ public:
                                        {1, 5,  6, 4},
                                        {1, 20, 9, 4}};
 
-        bestFirstSearch1(matrix1);
-        BFS1(matrix1);
+//        bestFirstSearch1(matrix1);
+//        BFS1(matrix1);
         DFS1(matrix1);
-        AStar1(matrix1);
+//        AStar1(matrix1);
 
         cout << endl;
 
@@ -44,10 +44,10 @@ public:
                 {1, 1, 1, 0, 0, 0, 1, 0, 0, 1}
         };
 
-        bestFirstSearch1(matrix2);
-        BFS1(matrix2);
-        DFS1(matrix2);
-        AStar1(matrix2);
+//        bestFirstSearch1(matrix2);
+//        BFS1(matrix2);
+//        DFS1(matrix2);
+//        AStar1(matrix2);
 
         vector<vector<int>> matrix3 = {
                 {1, 1, 1},
@@ -55,7 +55,7 @@ public:
                 {1, 1, 1}
         };
 
-        AStar1(matrix3);
+//        AStar1(matrix3);
 
         cout << endl;
 

@@ -15,5 +15,9 @@ while not msg == 'end\r\n':
     data = s.recv(4096)
     print "Server sent: ", data
     msg = raw_input("Message to send: ") + '\r\n'
+
 # close the socket
+s.send(msg)
+print("Message sent: " + msg)
+
 s.close()

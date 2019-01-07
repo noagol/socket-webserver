@@ -15,7 +15,6 @@ namespace algorithms {
     public:
         BaseSearcher() {}
 
-
         Solution<StateType> *getSolutionPath(State<StateType> *state) {
             vector<State<StateType> *> path;
             int cost = 0;
@@ -23,9 +22,11 @@ namespace algorithms {
             State<StateType> *copiedState = new State<StateType>;
             *copiedState = *state;
             path.push_back(copiedState);
+            cost += copiedState->getCost();
+
 
             // Run through the path
-            while (copiedState->getParent() != nullptr) {
+            do {
                 // Get parent
                 state = copiedState->getParent();
                 // Allocate new memory
@@ -36,8 +37,7 @@ namespace algorithms {
                 path.push_back(copiedState);
                 // Add the cost to the total
                 cost += copiedState->getCost();
-            }
-
+            } while (copiedState->getParent() != nullptr);
 
             // Reverse the path
             reverse(path.begin(), path.end());

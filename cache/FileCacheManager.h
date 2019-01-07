@@ -22,7 +22,7 @@ using namespace std;
  * @tparam T a given object
  */
 template<class Solution>
-class FileCacheManager : public CacheManager<Solution>{
+class FileCacheManager : public CacheManager<Solution> {
 protected:
     map<string, Solution *> dbOld;
     map<string, Solution *> dbNew;
@@ -59,7 +59,7 @@ void FileCacheManager<Solution>::save() {
     }
 
     for (auto const &x : dbNew) {
-        outfile << *x.second;
+        outfile << x.first << '\t' << *x.second << endl;
     }
 
     outfile.close();
@@ -91,6 +91,9 @@ Solution *FileCacheManager<Solution>::find(string &problemStr) {
 
 
     while (getline(infile, line)) {
+        if (line.empty()) {
+            continue;
+        }
         // Read a line and split it
         spl = split(&line, '\t');
         if (dbOld.find(spl.at(0)) == dbOld.end()) {

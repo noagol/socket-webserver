@@ -8,7 +8,7 @@
 #include "BaseClientHandler.h"
 #include "../problem_solver/Solver.h"
 #include "../cache/FileCacheManager.h"
-
+#include <sys/socket.h>
 
 using namespace problem_solver;
 using namespace std;
@@ -24,12 +24,23 @@ namespace client_side {
             string problem;
             string *solution;
             string *cached;
-            problem = readValuesToBuffer(inputSocket);
+
+            // To check socket status
+            int error = 0;
+            socklen_t len = sizeof(error);
+
+            if (getsockopt(inputSocket, SOL_SOCKET, SO_ERROR, &error, &len) == 0) {
+                problem = readValuesToBuffer(inputSocket);
+            }
             do {
                 if (problem.empty()) {
-                    write(inputSocket, "-", 1);
-                    problem = readValuesToBuffer(inputSocket);
-                    continue;
+                    if (getsockopt(inputSocket, SOL_SOCKET, SO_ERROR, &error, &len) == 0) {
+                        write(inputSocket, "-", 1);
+                        problem = readValuesToBuffer(inputSocket);
+                        continue;
+                    } else {
+                        break;
+                    }
                 }
 
                 // Search in cache
@@ -49,7 +60,11 @@ namespace client_side {
                 write(inputSocket, solution->c_str(), solution->size());
 
                 // Read one more line
-                problem = readValuesToBuffer(inputSocket);
+                if (getsockopt(inputSocket, SOL_SOCKET, SO_ERROR, &error, &len) == 0) {
+                    problem = readValuesToBuffer(inputSocket);
+                } else {
+                    break;
+                }
             } while (problem != "end");
 
             close(inputSocket);

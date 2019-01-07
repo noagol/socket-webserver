@@ -63,7 +63,7 @@ namespace server_side {
                 exit(1);
             }
 
-            // Set timeout // TODO: CHECK ACCEPT ENDS
+            // Set timeout
             struct timeval tv;
             tv.tv_sec = 10;  /* 150 Secs Timeout */
             setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (struct timeval *) &tv, sizeof(struct timeval));
@@ -92,7 +92,7 @@ namespace server_side {
             // Update variables
             while (!shouldStop) {
                 // Accept actual connection from the client
-                newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, (socklen_t *) &clilen); // TODO: ADD TIMEOUT
+                newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, (socklen_t *) &clilen);
 
                 if (newsockfd == -1) {
                     // No one accepted
@@ -101,7 +101,11 @@ namespace server_side {
 
 
                 // Client handler
-                clientHandler->handleClient(newsockfd, cout);
+                try {
+                    clientHandler->handleClient(newsockfd, cout);
+                } catch (exception &ex) {
+                    cout << ex.what() << endl;
+                }
 
 
                 // Close the socket
@@ -115,22 +119,6 @@ namespace server_side {
 
             close(sockfd);
         }
-
-//        void readValuesToBuffer(char *buffer, int socket) {
-//            bzero(buffer, 1024);
-//            int i = 0;
-//            ssize_t n = 0;
-//            char last = '\0';
-//            while (i < 1024 && last != '\n' && n >= 0) {
-//                n = read(socket, buffer + i, 1);
-//                last = buffer[i];
-//                i++;
-//            }
-//
-//            if (n < 0) {
-//                throw runtime_error("Error reading from socket");
-//            }
-//        }
     };
 }
 

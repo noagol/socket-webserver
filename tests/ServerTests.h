@@ -14,11 +14,16 @@ class ServerTests {
 public:
     static void simpleServer1() {
 
-        MyTestClientHandler clientHandler = MyTestClientHandler(new StringReverser());
+        MyTestClientHandler *clientHandler = new MyTestClientHandler(new StringReverser());
 
-        MySerialServer server = MySerialServer();
-        server.open(12346, &clientHandler);
+        MySerialServer *server = new MySerialServer();
+        server->open(12346, clientHandler);
+        this_thread::sleep_for(std::chrono::milliseconds((unsigned int) 30000));
 
+        server->stop();
+
+        delete (server);
+        delete (clientHandler);
         this_thread::sleep_for(std::chrono::milliseconds((unsigned int) 200000000000000000));
     }
 };
