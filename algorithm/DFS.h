@@ -69,6 +69,7 @@ namespace algorithms {
                             goalStates.push_back(v);
                         }
 
+
                     }
                 }
             }
