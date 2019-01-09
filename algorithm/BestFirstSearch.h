@@ -19,7 +19,7 @@ namespace algorithms {
     public:
         BestFirstSearch() : BaseSearcher<StateType>() {}
 
-        Solution<StateType> *search(Searchable<StateType> *searchable) override {
+        SearchSolution<StateType> *search(Searchable<StateType> *searchable) override {
             priority_queue<State<StateType> *, vector<State<StateType> *>, CompareState<StateType>> open;
             PointerSet<State<StateType>> openSet;
             open.push(searchable->getInitialState());

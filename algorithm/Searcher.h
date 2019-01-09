@@ -5,6 +5,7 @@
 #ifndef SERVER_SIDE_PROJECT_ALGORITHM_H
 #define SERVER_SIDE_PROJECT_ALGORITHM_H
 
+#include <SearchSolution.h>
 #include "../problem_solver/Solution.h"
 #include "../problem_solver/Searchable.h"
 
@@ -14,7 +15,7 @@ namespace algorithms {
     template<class T>
     class Searcher {
     public:
-        virtual Solution<T> *search(Searchable<T> *searchable) = 0;
+        virtual SearchSolution<T> *search(Searchable<T> *searchable) = 0;
     };
 }
 

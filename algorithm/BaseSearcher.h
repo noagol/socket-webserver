@@ -15,7 +15,7 @@ namespace algorithms {
     public:
         BaseSearcher() {}
 
-        Solution<StateType> *getSolutionPath(State<StateType> *state) {
+        SearchSolution<StateType> *getSolutionPath(State<StateType> *state) {
             vector<State<StateType> *> path;
             int cost = 0;
 

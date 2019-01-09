@@ -28,6 +28,10 @@ namespace problem_solver {
             return state;
         }
 
+        void setParent(State<T> *state) {
+            parent = state;
+        }
+
         int getCost() const {
             return cost;
         }
@@ -79,7 +83,7 @@ namespace problem_solver {
 
     template<class T>
     struct StateComparator : public binary_function<State<T>, State<T>, bool> {
-        bool operator()(const State<T>& lhs, const State<T>& rhs) const {
+        bool operator()(const State<T> &lhs, const State<T> &rhs) const {
             return lhs.getState() < rhs.getState();
         }
     };

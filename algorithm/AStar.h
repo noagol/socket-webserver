@@ -51,7 +51,7 @@ namespace algorithms {
 //            }
 //        };
 
-        Solution<StateType> *search(Searchable<StateType> *searchable) override {
+        SearchSolution<StateType> *search(Searchable<StateType> *searchable) override {
             // Priority queue by total value
             priority_queue<Vertex, vector<Vertex>, CompareVertex> Q;
 

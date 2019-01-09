@@ -30,11 +30,14 @@ int main() {
 //    s.insert(f, state);
 
 
-    AlgorithmTests::test();
+//    AlgorithmTests::test();
 
 
 //    AlgorithmTests::loadTest1();
 
 //    ServerTests::simpleServer1();
+//    ServerTests::parallelServer1();
+    ServerTests::parallelServer2();
+
     return 0;
 }

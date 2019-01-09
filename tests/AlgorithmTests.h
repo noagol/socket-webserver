@@ -25,10 +25,10 @@ public:
                                        {1, 5,  6, 4},
                                        {1, 20, 9, 4}};
 
-//        bestFirstSearch1(matrix1);
-//        BFS1(matrix1);
-        DFS1(matrix1);
-//        AStar1(matrix1);
+//        bestFirstSearch1(&matrix1);
+        BFS1(&matrix1);
+        DFS1(&matrix1);
+//        AStar1(&matrix1);
 
         cout << endl;
 
@@ -44,25 +44,25 @@ public:
                 {1, 1, 1, 0, 0, 0, 1, 0, 0, 1}
         };
 
-//        bestFirstSearch1(matrix2);
-//        BFS1(matrix2);
-//        DFS1(matrix2);
-//        AStar1(matrix2);
+//        bestFirstSearch1(&matrix2);
+        BFS1(&matrix2);
+//        DFS1(&matrix2);
+//        AStar1(&matrix2);
 
         vector<vector<int>> matrix3 = {
-                {1, 1, 1},
-                {1, 1, 1},
-                {1, 1, 1}
+                {1, 5, 5},
+                {3, 10, 5},
+                {1, 3, 1}
         };
 
-//        AStar1(matrix3);
+//        AStar1(&matrix3);
 
         cout << endl;
 
 
     }
 
-    static void bestFirstSearch1(vector<vector<int>> matrix) {
+    static void bestFirstSearch1(vector<vector<int>>* matrix) {
         SearchableMatrix problem = SearchableMatrix(matrix);
         SearcherSolver<Position<int>>
                 s = SearcherSolver<Position<int >>(new BestFirstSearch<Position<int>>());
@@ -75,7 +75,7 @@ public:
         delete (sol);
     }
 
-    static void BFS1(vector<vector<int>> matrix) {
+    static void BFS1(vector<vector<int>>* matrix) {
         SearchableMatrix problem = SearchableMatrix(matrix);
         SearcherSolver<Position<int>>
                 s = SearcherSolver<Position<int >>(new BFS<Position<int>>());
@@ -87,7 +87,7 @@ public:
         delete (sol);
     }
 
-    static void DFS1(vector<vector<int>> matrix) {
+    static void DFS1(vector<vector<int>>* matrix) {
         SearchableMatrix problem = SearchableMatrix(matrix);
         SearcherSolver<Position<int>>
                 s = SearcherSolver<Position<int >>(new DFS<Position<int>>());
@@ -99,7 +99,7 @@ public:
         delete (sol);
     }
 
-    static void AStar1(vector<vector<int>> matrix) {
+    static void AStar1(vector<vector<int>>* matrix) {
         SearchableMatrix problem = SearchableMatrix(matrix);
         SearcherSolver<Position<int>>
                 s = SearcherSolver<Position<int >>(new AStar<Position<int>>());

@@ -14,6 +14,7 @@
 #include <vector>
 #include "../helpers/StringHelpers.h"
 #include "CacheManager.h"
+#include <mutex>
 
 using namespace std;
 
@@ -27,6 +28,7 @@ protected:
     map<string, Solution *> dbOld;
     map<string, Solution *> dbNew;
     string filename;
+    mutex lock;
 public:
     FileCacheManager(string file_path);
 
@@ -45,6 +47,7 @@ FileCacheManager<Solution>::FileCacheManager(string file_path) : filename(file_p
 
 template<class Solution>
 void FileCacheManager<Solution>::add(string &problem, Solution *solution) {
+    lock_guard<mutex> l(lock);
     dbNew[problem] = solution;
 }
 
@@ -67,6 +70,7 @@ void FileCacheManager<Solution>::save() {
 
 template<class Solution>
 Solution *FileCacheManager<Solution>::find(string &problemStr) {
+    lock_guard<mutex> l(lock);
     // Check in the maps
     if (dbNew.find(problemStr) != dbNew.end()) {
         return dbNew[problemStr];

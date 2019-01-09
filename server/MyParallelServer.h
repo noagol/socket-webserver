@@ -1,9 +1,9 @@
 //
-// Created by noa on 03/01/2019.
+// Created by EB on 08/01/2019.
 //
 
-#ifndef SERVER_SIDE_PROJECT_MYSERIALSERVER_H
-#define SERVER_SIDE_PROJECT_MYSERIALSERVER_H
+#ifndef SERVER_SIDE_PROJECT_MYPARALLELSERVER_H
+#define SERVER_SIDE_PROJECT_MYPARALLELSERVER_H
 
 #include "iostream"
 #include "BaseServer.h"
@@ -12,7 +12,6 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <netinet/in.h>
-#include <thread>
 #include <string.h>
 #include "../client/MyTestClientHandler.h"
 #include "../problem_solver/StringReverser.h"
@@ -21,21 +20,35 @@ using namespace client_side;
 using namespace std;
 
 namespace server_side {
-    class MySerialServer : public BaseServer {
+    class MyParallelServer : public BaseServer {
         static bool shouldStop;
     public:
-        MySerialServer() : BaseServer() {}
+        MyParallelServer() : BaseServer() {}
 
-        void run(int port, ClientHandler *clientHandler) override;
+        void run(int port, ClientHandler *clientHandler) override {
+            // Run the server in new thread
+            thread serverThread(runServer, port, clientHandler);
+            serverThread.detach();
+        }
 
-        void stop() override;
+        void stop() override {
+            shouldStop = true;
+        }
+
+        static void runThread(int clientSocket, ClientHandler *clientHandler) {
+            // Run a thread to handle client
+            clientHandler->handleClient(clientSocket, cout);
+
+            // Close the socket
+            if (clientSocket) {
+                close(clientSocket);
+            }
+        }
 
         /**
          * Runs a server
          * @param port the port of the server
-         * @param timesPerSecond how many time to read in a second
-         * @param bindTable the bind table
-         * @param symbolTable the symbol table
+         * @param clientHandler client handler
          */
         static void runServer(int port, ClientHandler *clientHandler) {
             int sockfd, newsockfd, portno, clilen;
@@ -74,9 +87,10 @@ namespace server_side {
             /** Now start listening for the clients, here process will
             go in sleep mode and will wait for the incoming connection
             **/
-            listen(sockfd, 5);
+            listen(sockfd, 100);
             clilen = sizeof(cli_addr);
 
+            thread clientThread;
             // Update variables
             while (!shouldStop) {
                 // Accept actual connection from the client
@@ -87,40 +101,16 @@ namespace server_side {
                     continue;
                 }
 
-
-                // Client handler
-                try {
-                    clientHandler->handleClient(newsockfd, cout);
-                } catch (exception &ex) {
-                    cout << ex.what() << endl;
-                }
-
-
-                // Close the socket
-                if (newsockfd) {
-                    close(newsockfd);
-                }
-
-                this_thread::sleep_for(std::chrono::milliseconds((unsigned int) 200));
+                clientThread = thread(runThread, newsockfd, clientHandler);
+                clientThread.detach();
             }
-
 
             close(sockfd);
         }
     };
 }
 
-bool server_side::MySerialServer::shouldStop = false;
-
-void server_side::MySerialServer::run(int port, ClientHandler *clientHandler) {
-    // Run the server in new thread
-    thread serverThread(runServer, port, clientHandler);
-    serverThread.detach();
-}
-
-void server_side::MySerialServer::stop() {
-    shouldStop = true;
-}
+bool server_side::MyParallelServer::shouldStop = false;
 
 
-#endif //SERVER_SIDE_PROJECT_MYSERIALSERVER_H
+#endif //SERVER_SIDE_PROJECT_MYPARALLELSERVER_H

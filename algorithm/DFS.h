@@ -20,17 +20,16 @@ namespace algorithms {
     public:
         DFS() : BaseSearcher<StateType>() {}
 
-        Solution<StateType> *search(Searchable<StateType> *searchable) override {
+        SearchSolution<StateType> *search(Searchable<StateType> *searchable) override {
             stack<State<StateType> *> S;
             Set<StateType, int> d;
-            Set<StateType, State<StateType> *> pi;
+            Set<StateType, StateType> pi;
 
-            PointerSet<State<StateType>> visited;
+            Set<StateType, State<StateType> *> visited;
 
             // Get the initial vertex
             State<StateType> *initial = searchable->getInitialState();
             d.insert(initial->getState(), 0);
-            pi.insert(initial->getState(), initial);
 
             // Add to Queue
             S.push(initial);
@@ -40,16 +39,16 @@ namespace algorithms {
             vector<State<StateType> *> adj;
             vector<State<StateType> *> goalStates;
             typename vector<State<StateType> *>::iterator it;
-            typename map<State<StateType>*, int>::iterator d_it;
+            typename map<State<StateType> *, int>::iterator d_it;
 
             // Run until Q is empty
             while (!S.empty()) {
                 // Pop vertex
                 u = S.top();
                 S.pop();
-                if (!visited.exists(u)) {
+                if (!visited.exists(u->getState())) {
                     // Set as visited
-                    visited.add(u);
+                    visited.insert(u->getState(), u);
                     // Get all adjacent
                     adj = searchable->getAllPossibleStates(u);
 
@@ -60,7 +59,7 @@ namespace algorithms {
                         // Has not been visited
                         if (!d.exists(v->getState()) || d.find(v->getState()) > d.find(u->getState()) + v->getCost()) {
                             d.insert(v->getState(), d.find(u->getState()) + v->getCost());
-                            pi.insert(v->getState(), v);
+                            pi.insert(v->getState(), u->getState());
                         };
 
                         S.push(v);
@@ -68,8 +67,6 @@ namespace algorithms {
                         if (searchable->isGoalState(v)) {
                             goalStates.push_back(v);
                         }
-
-
                     }
                 }
             }
@@ -79,12 +76,22 @@ namespace algorithms {
             }
 
             // Get minimal path to goal state
-            State<StateType> *shortestGoalState = pi.find(goalStates.at(0)->getState());
+            State<StateType> *shortestGoalState = visited.find(goalStates.at(0)->getState());
 
             for (it = goalStates.begin() + 1; it != goalStates.end(); it++) {
                 if (d.find((*it)->getState()) < d.find(shortestGoalState->getState())) {
-                    shortestGoalState = pi.find((*it)->getState());
+                    shortestGoalState = visited.find((*it)->getState());
                 }
+            }
+
+            StateType parent;
+            State<StateType> *parentState, *currentState = shortestGoalState;
+
+            while (pi.exists(currentState->getState())) {
+                parent = pi.find(currentState->getState());
+                parentState = visited.find(parent);
+                currentState->setParent(parentState);
+                currentState = parentState;
             }
 
             return this->getSolutionPath(shortestGoalState);
