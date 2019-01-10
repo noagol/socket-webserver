@@ -29,10 +29,7 @@ namespace problem_solver {
     };
 
     /**
-     *
-     * @param os
-     * @param searchable
-     * @return
+     *  Prints to stream
      */
     template<class V>
      ostream &operator<<(ostream &os, const Searchable<V> &searchable) {

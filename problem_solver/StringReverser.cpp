@@ -3,8 +3,8 @@
 namespace problem_solver {
 
     /**
-     *
-     * @param problem
+     * Reverse a string
+     * @param problem string
      * @return reverse string
      */
     string *StringReverser::solve(string *problem) {

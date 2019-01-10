@@ -2,6 +2,9 @@
 
 namespace problem_solver {
 
+    /**
+     * Constructs empty matrix
+     */
     SearchableMatrix::SearchableMatrix() : matrix(), allocatedMemory() {
         goalState = new State<Position<int>>(Position<int>(0, 0), 0, nullptr);
         initialState = new State<Position<int>>(Position<int>(0, 0), 0, nullptr);
@@ -9,6 +12,10 @@ namespace problem_solver {
         allocatedMemory.push_back(initialState);
     }
 
+    /**
+     * Constructs searchable matrix object
+     * @param m matrix
+     */
     SearchableMatrix::SearchableMatrix(vector<vector<int>> *m) : matrix(*m), allocatedMemory() {
         goalState = new State<Position<int>>(Position<int>(m->at(0).size() - 1, m->size() - 1),
                                              m->at(m->size() - 1).at(m->at(0).size() - 1),
@@ -21,6 +28,12 @@ namespace problem_solver {
         updateAverageWeight();
     }
 
+    /**
+     * Constructs searchable matrix object
+     * @param m matrix
+     * @param initialPos intial position
+     * @param goalPos goal position
+     */
     SearchableMatrix::SearchableMatrix(vector<vector<int>> *m, Position<int> &initialPos,
                                        Position<int> &goalPos) : matrix(*m),
                                                                  allocatedMemory() {
@@ -89,11 +102,13 @@ namespace problem_solver {
 
         validatePosition(curr);
 
+        // movement booleans
         bool canMoveUp = curr.getY() > 0;
         bool canMoveDown = curr.getY() < matrix.size() - 1;
         bool canMoveLeft = curr.getX() > 0;
         bool canMoveRight = curr.getX() < matrix.at(0).size() - 1;
 
+        // Add to list all possible states
         vector<State<Position<int>> *> states;
         State<Position<int>> *state;
         if (canMoveUp && (matrix.at(curr.getY() - 1).at(curr.getX()) != -1)) {
@@ -124,12 +139,13 @@ namespace problem_solver {
             allocatedMemory.push_back(state);
         }
 
+        // Return possible states
         return states;
     }
 
     /**
      * Check if a current position isn't valid
-     * @param curr
+     * @param curr validate position is in matrix
      */
     void SearchableMatrix::validatePosition(Position<int> curr) {
         if (curr.getX() >= matrix.at(0).size() || curr.getY() >= matrix.size()) {
@@ -137,6 +153,12 @@ namespace problem_solver {
         }
     }
 
+    /**
+     * Prints object to stream
+     * @param os stream
+     * @param searchable object
+     * @return os
+     */
     ostream &operator<<(ostream &os, SearchableMatrix &searchable) {
         typename vector<vector<int>>::iterator it1;
         typename vector<int>::iterator it2;
@@ -158,6 +180,12 @@ namespace problem_solver {
         return os;
     }
 
+    /**
+     * Loads object from stream
+     * @param os stream
+     * @param searchable matrix
+     * @return os
+     */
     istream &operator>>(istream &os, SearchableMatrix &searchable) {
         string input;
         os >> input;
@@ -179,6 +207,7 @@ namespace problem_solver {
             }
         }
 
+        // Set goal and initial states
         searchable.goalState = new State<Position<int>>(
                 Position<int>(searchable.matrix.at(0).size() - 1, searchable.matrix.size() - 1),
                 searchable.matrix.at(searchable.matrix.size() - 1).at(searchable.matrix.at(0).size() - 1),
@@ -186,6 +215,9 @@ namespace problem_solver {
         searchable.initialState = new State<Position<int>>(Position<int>(0, 0),
                                                            searchable.matrix.at(0).at(0),
                                                            nullptr);
+        searchable.updateAverageWeight();
+
+        // Add to allocated memory
         searchable.allocatedMemory.push_back(searchable.goalState);
         searchable.allocatedMemory.push_back(searchable.initialState);
 
@@ -193,6 +225,9 @@ namespace problem_solver {
     }
 
 
+    /**
+     * free allocated memory
+     */
     SearchableMatrix::~SearchableMatrix() {
         typename vector<State<Position<int>> *>::iterator it;
         for (it = allocatedMemory.begin(); it != allocatedMemory.end(); it++) {
@@ -200,6 +235,10 @@ namespace problem_solver {
         }
     }
 
+    /**
+     * Print object to stream
+     * @param os stream
+     */
     void SearchableMatrix::print(ostream &os) const {
         typename vector<vector<int>>::iterator it1;
         typename vector<int>::iterator it2;
@@ -221,6 +260,9 @@ namespace problem_solver {
         os << *it2;
     }
 
+    /**
+     * Update the average weight
+     */
     void SearchableMatrix::updateAverageWeight() {
         typename vector<vector<int>>::iterator it1;
         typename vector<int>::iterator it2;

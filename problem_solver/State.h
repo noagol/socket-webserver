@@ -14,60 +14,27 @@ namespace problem_solver {
         int cost;
         State<T> *parent;
     public:
-        State() {}
+        State();
 
-        State(T currState, int moveCost, State<T> *lastState) :
-                state(currState),
-                cost(moveCost),
-                parent(lastState) {}
+        State(T currState, int moveCost, State<T> *lastState);
 
-        T getState() {
-            return state;
-        }
+        T getState();
 
-        void setParent(State<T> *state) {
-            parent = state;
-        }
+        void setParent(State<T> *state);
 
-        int getCost() const {
-            return cost;
-        }
+        int getCost() const;
 
-        State<T> *getParent() {
-            return parent;
-        }
+        State<T> *getParent();
 
-        bool operator<(const State &right) {
-            return this->state < right.state;
-        }
+        bool operator<(const State &right);
 
-        bool operator==(State &right) {
-            return state == right.getState();
-        }
+        bool operator==(State &right);
 
-        friend ostream &operator<<(ostream &os, State &st) {
-            os << st.cost << "/" << st.state;
-            return os;
-        }
+        template<class V>
+        friend ostream &operator<<(ostream &os, State<V> &st);
 
-        friend istream &operator>>(istream &os, State &st) {
-            string input;
-            os >> input;
-
-            // Split
-            vector<string> spl = split(&input,
-                                       '/');
-
-            // Turn to streams
-            istringstream c{spl.at(0)};
-            istringstream s{spl.at(1)};
-
-            // Write to object
-            c >> st.cost;
-            s >> st.state;
-
-            return os;
-        }
+        template<class V>
+        friend istream &operator>>(istream &os, State<V> &st);
     };
 
     // Comparator
@@ -84,6 +51,71 @@ namespace problem_solver {
             return lhs.getState() < rhs.getState();
         }
     };
+
+    template<class T>
+    State<T>::State() {}
+
+    template<class T>
+    State<T>::State(T currState, int moveCost, State<T> *lastState) :
+            state(currState),
+            cost(moveCost),
+            parent(lastState) {}
+
+    template<class T>
+    T State<T>::getState() {
+        return state;
+    }
+
+    template<class T>
+    void State<T>::setParent(State<T> *state) {
+        parent = state;
+    }
+
+    template<class T>
+    int State<T>::getCost() const {
+        return cost;
+    }
+
+    template<class T>
+    State<T> *State<T>::getParent() {
+        return parent;
+    }
+
+    template<class T>
+    bool State<T>::operator<(const State &right) {
+        return this->state < right.state;
+    }
+
+    template<class T>
+    bool State<T>::operator==(State &right) {
+        return state == right.getState();
+    }
+
+    template<class T>
+    ostream &operator<<(ostream &os, State<T> &st) {
+        os << st.cost << "/" << st.state;
+        return os;
+    }
+
+    template<class T>
+    istream &operator>>(istream &os, State<T> &st) {
+        string input;
+        os >> input;
+
+        // Split
+        vector<string> spl = split(&input,
+                                   '/');
+
+        // Turn to streams
+        istringstream c{spl.at(0)};
+        istringstream s{spl.at(1)};
+
+        // Write to object
+        c >> st.cost;
+        s >> st.state;
+
+        return os;
+    }
 }
 
 

@@ -79,7 +79,7 @@ namespace algorithms {
                     this->counter++;
 
                     // Has not been visited
-                    if (!d.exists(v->getState()) || d.find(v->getState()) > d.find(u->getState()) + v->getCost()) {
+                    if (!d.exists(v->getState()) || d.find(v->getState()) > d.find(u->getState()) + 1) {
                         d.insert(v->getState(), d.find(u->getState()) + 1);
                         pi.insert(v->getState(), u->getState());
                     };

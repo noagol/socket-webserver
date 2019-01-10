@@ -20,19 +20,27 @@ namespace problem_solver {
         ~SearcherSolver();
     };
 
+    /**
+     * Searcher solver object
+     * @tparam StateType state type
+     * @param s solver
+     */
     template<class StateType>
     SearcherSolver<StateType>::SearcherSolver(Searcher<StateType> *s) : searcher(s) {}
 
     /**
-     *
-     * @param problem
-     * @return
+     * Solve search problem
+     * @param problem the problem
+     * @return the solution
      */
     template<class StateType>
     SearchSolution<StateType> *SearcherSolver<StateType>::solve(Searchable<StateType> *problem) {
         return searcher->search(problem);
     }
 
+    /**
+     * free the solver
+     */
     template<class StateType>
     SearcherSolver<StateType>::~SearcherSolver() {
         delete (searcher);

@@ -31,6 +31,9 @@ namespace problem_solver {
         virtual void print(ostream &o) const = 0;
     };
 
+    /**
+     * Prints solution to stream
+     */
     template<class V>
     ostream &operator<<(ostream &os, const Solution<V> &solution) {
         solution.print(os); // delegate the work to a polymorphic member function.
