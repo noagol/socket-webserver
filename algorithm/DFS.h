@@ -20,6 +20,11 @@ namespace algorithms {
     public:
         DFS() : BaseSearcher<StateType>() {}
 
+        /**
+        * Search using DFS in a searchable object
+        * @param searchable searchable object
+        * @return a solution for shortest path in the searchable
+        */
         SearchSolution<StateType> *search(Searchable<StateType> *searchable) override {
             stack<State<StateType> *> S;
             Set<StateType, int> d;

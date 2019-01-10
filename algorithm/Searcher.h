@@ -15,8 +15,17 @@ namespace algorithms {
     template<class T>
     class Searcher {
     public:
+        /**
+        * Search using a search algorithm in a searchable object
+        * @param searchable searchable object
+        * @return a solution for shortest path in the searchable
+        */
         virtual SearchSolution<T> *search(Searchable<T> *searchable) = 0;
 
+        /**
+         * Get count of verticies visited in the algorithms last run
+         * @return the count
+         */
         virtual int getCount() = 0;
     };
 }

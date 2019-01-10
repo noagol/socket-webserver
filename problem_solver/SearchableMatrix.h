@@ -74,9 +74,7 @@ namespace problem_solver {
         double estimateDistanceToGoal(State<Position<int>> *state) override {
             int x = abs(state->getState().getX() - goalState->getState().getX());
             int y = abs(state->getState().getY() - goalState->getState().getY());
-//            double x = abs((state->getState().getX() - goalState->getState().getX()) * 2);
-//            double y = abs((state->getState().getY() - goalState->getState().getY()) * 2);
-            return (x + y) * (averageWeight/2);
+            return (x + y) * (averageWeight / 2);
         }
 
         bool isGoalState(State<Position<int>> *state) override {
