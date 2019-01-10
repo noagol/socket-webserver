@@ -1,6 +1,3 @@
-//
-// Created by noa on 03/01/2019.
-//
 
 #ifndef SERVER_SIDE_PROJECT_STATE_H
 #define SERVER_SIDE_PROJECT_STATE_H

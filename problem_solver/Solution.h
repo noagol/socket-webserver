@@ -34,7 +34,11 @@ namespace problem_solver {
         virtual void print(ostream &o) const = 0;
     };
 
-
+    template<class V>
+    ostream &operator<<(ostream &os, const Solution<V> &solution) {
+        solution.print(os); // delegate the work to a polymorphic member function.
+        return os;
+    }
 }
 
 #endif //SERVER_SIDE_PROJECT_SOLUTION_H

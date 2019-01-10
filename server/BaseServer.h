@@ -1,6 +1,4 @@
-//
-// Created by noa on 03/01/2019.
-//
+
 
 #ifndef SERVER_SIDE_PROJECT_BASESERVER_H
 #define SERVER_SIDE_PROJECT_BASESERVER_H
@@ -13,15 +11,7 @@ namespace server_side {
     public:
         BaseServer() {}
 
-        void open(int port, ClientHandler *clientHandler) override {
-            // validate
-            if (1 > port || port > 65535) {
-                throw invalid_argument(format("Port value out of range: %d", port));
-            }
-
-            // Run the server
-            run(port, clientHandler);
-        }
+        void open(int port, ClientHandler *clientHandler) override;
 
         /**
          * Runs a server

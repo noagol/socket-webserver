@@ -30,5 +30,18 @@ namespace problem_solver {
     protected:
         virtual void print(ostream &o) const = 0;
     };
+
+    /**
+     *
+     * @param os
+     * @param searchable
+     * @return
+     */
+    template<class V>
+     ostream &operator<<(ostream &os, const Searchable<V> &searchable) {
+        searchable.print(os); // delegate the work to a polymorphic member function.
+        return os;
+    }
+
 }
 #endif //SERVER_SIDE_PROJECT_SEARCH_H

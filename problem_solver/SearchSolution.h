@@ -1,6 +1,3 @@
-//
-// Created by noa on 03/01/2019.
-//
 
 #ifndef SERVER_SIDE_PROJECT_BASESOLUTION_H
 #define SERVER_SIDE_PROJECT_BASESOLUTION_H
@@ -22,11 +19,7 @@ namespace problem_solver {
     public:
         SearchSolution() : path(), totalCost(0), Solution<StateType>() {}
 
-        SearchSolution(vector<State < StateType> *
-
-        > p,
-        int cost
-        ) :
+        SearchSolution(vector<State < StateType> *> p, int cost) :
 
         path (p), totalCost(cost) {}
 

@@ -1,7 +1,3 @@
-//
-// Created by noa on 03/01/2019.
-//
-
 #ifndef SERVER_SIDE_PROJECT_SEARCHERSOLVER_H
 #define SERVER_SIDE_PROJECT_SEARCHERSOLVER_H
 
@@ -17,16 +13,30 @@ namespace problem_solver {
     class SearcherSolver : public Solver<Searchable<StateType>, SearchSolution<StateType>> {
         Searcher<StateType> *searcher;
     public:
-        SearcherSolver(Searcher<StateType> *s) : searcher(s) {}
+        SearcherSolver(Searcher<StateType> *s);
 
-        SearchSolution<StateType> *solve(Searchable<StateType> *problem) override {
-            return searcher->search(problem);
-        }
+        SearchSolution<StateType> *solve(Searchable<StateType> *problem) override;
 
-        ~SearcherSolver() {
-            delete (searcher);
-        }
+        ~SearcherSolver();
     };
+
+    template<class StateType>
+    SearcherSolver<StateType>::SearcherSolver(Searcher<StateType> *s) : searcher(s) {}
+
+    /**
+     *
+     * @param problem
+     * @return
+     */
+    template<class StateType>
+    SearchSolution<StateType> *SearcherSolver<StateType>::solve(Searchable<StateType> *problem) {
+        return searcher->search(problem);
+    }
+
+    template<class StateType>
+    SearcherSolver<StateType>::~SearcherSolver() {
+        delete (searcher);
+    }
 }
 
 #endif //SERVER_SIDE_PROJECT_SEARCHERSOLVER_H
