@@ -12,6 +12,8 @@ namespace algorithms {
 
     template<class StateType>
     class BaseSearcher : public Searcher<StateType> {
+    protected:
+        int counter;
     public:
         BaseSearcher() {}
 
@@ -43,6 +45,10 @@ namespace algorithms {
             reverse(path.begin(), path.end());
 
             return new SearchSolution<StateType>(path, cost);
+        }
+
+        int getCount() override {
+            return counter;
         }
     };
 }

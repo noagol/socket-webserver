@@ -24,7 +24,7 @@ public:
         return (bool) set.count(key);
     }
 
-    Value find(Key key) {
+    Value& find(Key key) {
         return set.at(key);
     }
 

@@ -44,12 +44,6 @@ namespace algorithms {
             }
         };
 
-//         //Comparator
-//        struct EqualityVertex : public binary_function<Vertex, Vertex, bool> {
-//            bool operator()(const Vertex lhs, const Vertex rhs) const {
-//                return *(lhs.state) < *(rhs.state);
-//            }
-//        };
 
         SearchSolution<StateType> *search(Searchable<StateType> *searchable) override {
             // Priority queue by total value
@@ -69,11 +63,13 @@ namespace algorithms {
             Vertex u, v;
             vector<State<StateType> *> adj;
             typename vector<State<StateType> *>::iterator it;
+            this->counter = 0;
 
             while (!open.empty()) {
                 // Get lowest total vertex
                 u = Q.top();
                 Q.pop();
+                this->counter++;
 
                 if (closed.exists(u.state->getState())) {
                     continue;
@@ -91,6 +87,8 @@ namespace algorithms {
                 // Get next states
                 adj = searchable->getAllPossibleStates(u.state);
                 for (it = adj.begin(); it != adj.end(); it++) {
+                    this->counter++;
+
                     if (closed.exists((*it)->getState())) {
                         continue;
                     }
@@ -106,11 +104,10 @@ namespace algorithms {
                         // Not in open and not in closed
                         open.insert(v.state->getState(), v);
                         Q.push(v);
-                    }
-
-                    else if (open.find(v.state->getState()).dFromStart > v.dFromStart) {
-                         //The vertex is found in open with better values
+                    } else if (open.find(v.state->getState()).dFromStart > v.dFromStart) {
+                        // The vertex is found in open with better values
                         open.insert(v.state->getState(), v);
+                        Q.push(v);
                     }
                 }
 

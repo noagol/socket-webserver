@@ -27,6 +27,8 @@ namespace algorithms {
 
             Set<StateType, State<StateType> *> visited;
 
+            this->counter = 0;
+
             // Get the initial vertex
             State<StateType> *initial = searchable->getInitialState();
             d.insert(initial->getState(), 0);
@@ -46,6 +48,9 @@ namespace algorithms {
                 // Pop vertex
                 u = S.top();
                 S.pop();
+
+                this->counter++;
+
                 if (!visited.exists(u->getState())) {
                     // Set as visited
                     visited.insert(u->getState(), u);
@@ -55,10 +60,11 @@ namespace algorithms {
                     // For each v in adj
                     for (it = adj.begin(); it != adj.end(); it++) {
                         v = *it;
+                        this->counter++;
 
                         // Has not been visited
                         if (!d.exists(v->getState()) || d.find(v->getState()) > d.find(u->getState()) + v->getCost()) {
-                            d.insert(v->getState(), d.find(u->getState()) + v->getCost());
+                            d.insert(v->getState(), d.find(u->getState()) + 1);
                             pi.insert(v->getState(), u->getState());
                         };
 

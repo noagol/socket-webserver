@@ -1,4 +1,5 @@
 #include <iostream>
+#include <Expirement.h>
 
 #include "tests/AlgorithmTests.h"
 #include "tests/ServerTests.h"
@@ -37,7 +38,10 @@ int main() {
 
 //    ServerTests::simpleServer1();
 //    ServerTests::parallelServer1();
-    ServerTests::parallelServer2();
+//    ServerTests::parallelServer2();
 
+    Expirement e = Expirement();
+    e.writeMatricesToFile("graphs.txt");
+    e.run();
     return 0;
 }

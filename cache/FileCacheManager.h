@@ -106,7 +106,7 @@ Solution *FileCacheManager<Solution>::find(string &problemStr) {
             istringstream is{spl.at(1)};
             solution = new Solution();
             is >> *solution;
-            dbOld[problemStr] = solution;
+            dbOld[spl.at(0)] = solution;
             if (spl.at(0) == problemStr) {
                 // We found the solution from the file
                 infile.close();

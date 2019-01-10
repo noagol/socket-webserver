@@ -48,7 +48,8 @@ public:
 
 
     static void parallelServer2() {
-        MyClientHandler *clientHandler = new MyClientHandler(new SearcherSolver<Position<int>>(new AStar<Position<int>>()));
+        MyClientHandler *clientHandler = new MyClientHandler(
+                new SearcherSolver<Position<int>>(new AStar<Position<int>>()));
 
         MyParallelServer *server = new MyParallelServer();
         server->open(12346, clientHandler);

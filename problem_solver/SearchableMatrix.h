@@ -13,10 +13,11 @@
 
 namespace problem_solver {
     class SearchableMatrix : public Searchable<Position<int>> {
-        State <Position<int>> *goalState;
-        State <Position<int>> *initialState;
+        State<Position<int>> *goalState;
+        State<Position<int>> *initialState;
         vector<vector<int>> matrix;
-        vector<State < Position<int>> *> allocatedMemory;
+        vector<State<Position<int>> *> allocatedMemory;
+        int averageWeight = 0;
     public:
         SearchableMatrix() : matrix(), allocatedMemory() {
             goalState = new State<Position<int>>(Position<int>(0, 0),
@@ -29,7 +30,7 @@ namespace problem_solver {
             allocatedMemory.push_back(initialState);
         }
 
-        SearchableMatrix(vector<vector<int>>* m) : matrix(*m), allocatedMemory() {
+        SearchableMatrix(vector<vector<int>> *m) : matrix(*m), allocatedMemory() {
             goalState = new State<Position<int>>(Position<int>(m->at(0).size() - 1, m->size() - 1),
                                                  m->at(m->size() - 1).at(m->at(0).size() - 1),
                                                  nullptr);
@@ -38,11 +39,18 @@ namespace problem_solver {
                                                     nullptr);
             allocatedMemory.push_back(goalState);
             allocatedMemory.push_back(initialState);
+            updateAverageWeight();
         }
 
         SearchableMatrix(vector<vector<int>> *m, Position<int> &initialPos,
                          Position<int> &goalPos) : matrix(*m),
                                                    allocatedMemory() {
+
+            if (m->size() == 0 || initialPos.getX() < 0 || initialPos.getY() < 0
+                || goalPos.getX() >= m->at(0).size() || goalPos.getY() >= m->size()) {
+                throw invalid_argument("Bad searchable matrix arguments given");
+            }
+
             goalState = new State<Position<int>>(goalPos,
                                                  m->at(goalPos.getY()).at(goalPos.getX()),
                                                  nullptr);
@@ -51,29 +59,33 @@ namespace problem_solver {
                                                     nullptr);
             allocatedMemory.push_back(goalState);
             allocatedMemory.push_back(initialState);
+            updateAverageWeight();
         }
+
 
         vector<vector<int>> getMatrix() const {
             return matrix;
         }
 
-        State <Position<int>> *getInitialState() override {
+        State<Position<int>> *getInitialState() override {
             return initialState;
         }
 
-        double estimateDistanceToGoal(State <Position<int>> *state) override {
-            double x = abs((state->getState().getX() - goalState->getState().getX()) * 2);
-            double y = abs((state->getState().getY() - goalState->getState().getY()) * 2);
-            return sqrt(x + y);
+        double estimateDistanceToGoal(State<Position<int>> *state) override {
+            int x = abs(state->getState().getX() - goalState->getState().getX());
+            int y = abs(state->getState().getY() - goalState->getState().getY());
+//            double x = abs((state->getState().getX() - goalState->getState().getX()) * 2);
+//            double y = abs((state->getState().getY() - goalState->getState().getY()) * 2);
+            return (x + y) * (averageWeight/2);
         }
 
-        bool isGoalState(State <Position<int>> *state) override {
+        bool isGoalState(State<Position<int>> *state) override {
             return state->getState().equals(goalState->getState());
         }
 
-        vector<State < Position<int>> *>
+        vector<State<Position<int>> *>
         getAllPossibleStates(State<Position<int>>
-        *current) override {
+                             *current) override {
             Position<int> curr = current->getState();
 
             validatePosition(curr);
@@ -83,64 +95,35 @@ namespace problem_solver {
             bool canMoveLeft = curr.getX() > 0;
             bool canMoveRight = curr.getX() < matrix.at(0).size() - 1;
 
-            vector<State < Position<int>> *> states;
-            State < Position<int>>
-            *state;
-            if (canMoveUp) {
-                state = new State <Position<int>>(Position<int>(curr.getX(), curr.getY() - 1),
-                                                  matrix.at(curr.getY() - 1).at(curr.getX()), current);
+            vector<State<Position<int>> *> states;
+            State<Position<int>> *state;
+            if (canMoveUp && (matrix.at(curr.getY() - 1).at(curr.getX()) != -1)) {
+                state = new State<Position<int>>(Position<int>(curr.getX(), curr.getY() - 1),
+                                                 matrix.at(curr.getY() - 1).at(curr.getX()), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
 
-            if (canMoveDown) {
-                state = new State <Position<int>>(Position<int>(curr.getX(), curr.getY() + 1),
-                                                  matrix.at(curr.getY() + 1).at(curr.getX()), current);
+            if (canMoveDown && (matrix.at(curr.getY() + 1).at(curr.getX()) != -1)) {
+                state = new State<Position<int>>(Position<int>(curr.getX(), curr.getY() + 1),
+                                                 matrix.at(curr.getY() + 1).at(curr.getX()), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
 
-            if (canMoveLeft) {
-                state = new State <Position<int>>(Position<int>(curr.getX() - 1, curr.getY()),
-                                                  matrix.at(curr.getY()).at(curr.getX() - 1), current);
+            if (canMoveLeft && (matrix.at(curr.getY()).at(curr.getX() - 1) != -1)) {
+                state = new State<Position<int>>(Position<int>(curr.getX() - 1, curr.getY()),
+                                                 matrix.at(curr.getY()).at(curr.getX() - 1), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
 
-            if (canMoveRight) {
-                state = new State <Position<int>>(Position<int>(curr.getX() + 1, curr.getY()),
-                                                  matrix.at(curr.getY()).at(curr.getX() + 1), current);
+            if (canMoveRight && (matrix.at(curr.getY()).at(curr.getX() + 1) != -1)) {
+                state = new State<Position<int>>(Position<int>(curr.getX() + 1, curr.getY()),
+                                                 matrix.at(curr.getY()).at(curr.getX() + 1), current);
                 states.push_back(state);
                 allocatedMemory.push_back(state);
             }
-//
-//            if (canMoveUp && canMoveLeft) {
-//                state = new State <Position<int>>(Position<int>(curr.getX() - 1, curr.getY() - 1),
-//                                                  matrix.at(curr.getY() - 1).at(curr.getX() - 1), current);
-//                states.push_back(state);
-//                allocatedMemory.push_back(state);
-//            }
-//
-//            if (canMoveUp && canMoveRight) {
-//                state = new State <Position<int>>(Position<int>(curr.getX() + 1, curr.getY() - 1),
-//                                                  matrix.at(curr.getY() - 1).at(curr.getX() + 1), current);
-//                states.push_back(state);
-//                allocatedMemory.push_back(state);
-//            }
-//
-//            if (canMoveDown && canMoveLeft) {
-//                state = new State <Position<int>>(Position<int>(curr.getX() - 1, curr.getY() + 1),
-//                                                  matrix.at(curr.getY() + 1).at(curr.getX() - 1), current);
-//                states.push_back(state);
-//                allocatedMemory.push_back(state);
-//            }
-//
-//            if (canMoveDown && canMoveRight) {
-//                state = new State <Position<int>>(Position<int>(curr.getX() + 1, curr.getY() + 1),
-//                                                  matrix.at(curr.getY() + 1).at(curr.getX() + 1), current);
-//                states.push_back(state);
-//                allocatedMemory.push_back(state);
-//            }
 
             return states;
         }
@@ -236,6 +219,23 @@ namespace problem_solver {
             os << *it2;
         }
 
+    private:
+        void updateAverageWeight() {
+            typename vector<vector<int>>::iterator it1;
+            typename vector<int>::iterator it2;
+            averageWeight = 0;
+            int counter = 0;
+            for (it1 = matrix.begin(); it1 != matrix.end(); it1++) {
+                for (it2 = (*it1).begin(); it2 != (*it1).end(); it2++) {
+                    if (*it2 >= 0) {
+                        averageWeight += *it2;
+                        counter++;
+                    }
+                }
+            }
+
+            averageWeight = averageWeight / counter;
+        }
     };
 }
 

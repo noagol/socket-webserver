@@ -21,6 +21,8 @@ namespace algorithms {
         BFS() : BaseSearcher<StateType>() {}
 
         SearchSolution<StateType> *search(Searchable<StateType> *searchable) override {
+            this->counter = 0;
+
             queue<State<StateType> *> S;
             Set<StateType, int> d;
             Set<StateType, StateType> pi;
@@ -46,6 +48,10 @@ namespace algorithms {
                 // Pop vertex
                 u = S.front();
                 S.pop();
+
+                // Inc counter
+                this->counter++;
+
                 if (!visited.exists(u->getState())) {
                     // Set as visited
                     visited.insert(u->getState(), u);
@@ -56,9 +62,12 @@ namespace algorithms {
                     for (it = adj.begin(); it != adj.end(); it++) {
                         v = *it;
 
+                        // Inc counter
+                        this->counter++;
+
                         // Has not been visited
                         if (!d.exists(v->getState()) || d.find(v->getState()) > d.find(u->getState()) + v->getCost()) {
-                            d.insert(v->getState(), d.find(u->getState()) + v->getCost());
+                            d.insert(v->getState(), d.find(u->getState()) + 1);
                             pi.insert(v->getState(), u->getState());
                         };
 

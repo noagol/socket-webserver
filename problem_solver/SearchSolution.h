@@ -16,18 +16,27 @@ namespace problem_solver {
      */
     template<class StateType>
     class SearchSolution : public Solution<StateType> {
-        vector<State<StateType> *> path;
+        vector<State < StateType> *>
+        path;
         int totalCost;
     public:
         SearchSolution() : path(), totalCost(0), Solution<StateType>() {}
 
-        SearchSolution(vector<State<StateType>*> p, int cost) : path(p), totalCost(cost) {}
+        SearchSolution(vector<State < StateType> *
 
-        void addState(State<StateType> *state) {
+        > p,
+        int cost
+        ) :
+
+        path (p), totalCost(cost) {}
+
+        void addState(State <StateType> *state) {
             path.push_back(state);
         }
 
-        virtual vector<State<StateType> *> getPath() const override {
+        virtual vector<State < StateType> *>
+
+        getPath() const override {
             return path;
         }
 
@@ -38,12 +47,17 @@ namespace problem_solver {
         template<class V>
         friend ostream &operator<<(ostream &os, SearchSolution &solution) {
             vector<State<V>> solPath = solution.getPath();
-            typename vector<State<V>>::iterator it;
-            for (it = solPath.begin(); it != (solPath.end() - 1); it++) {
-                os << *it << "|";
+
+            if (solPath.size() == 0) {
+                os << -1;
+            } else {
+                typename vector<State<V>>::iterator it;
+                for (it = solPath.begin(); it != (solPath.end() - 1); it++) {
+                    os << *it << "|";
+                }
+                // Write last item
+                os << *it;
             }
-            // Write last item
-            os << *it;
 
             os << endl;
 
@@ -61,7 +75,7 @@ namespace problem_solver {
 
             State<StateType> *parent = nullptr;
             State<StateType> *state;
-            int cost;
+            int cost, totalCost = 0;
             StateType type;
             int i;
 
@@ -71,6 +85,8 @@ namespace problem_solver {
 
                 istringstream costStream{item.at(0)};
                 costStream >> cost;
+                totalCost += cost;
+
 
                 istringstream stateStream{item.at(1)};
                 stateStream >> type;
@@ -79,6 +95,8 @@ namespace problem_solver {
                 solution.path.push_back(state);
                 parent = state;
             }
+
+            solution.totalCost = totalCost;
 
             return os;
         }
@@ -92,15 +110,13 @@ namespace problem_solver {
 
     protected:
         void print(ostream &os) const override {
-            vector<State<StateType>*> solPath = getPath();
-            typename vector<State<StateType>*>::iterator it;
+            vector<State<StateType> *> solPath = getPath();
+            typename vector<State<StateType> *>::iterator it;
             for (it = solPath.begin(); it != (solPath.end() - 1); it++) {
                 os << **it << "|";
             }
             // Write last item
             os << **it;
-
-            os << endl;
         }
 
     };

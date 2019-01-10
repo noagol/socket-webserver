@@ -25,12 +25,7 @@ public:
                                        {1, 5,  6, 4},
                                        {1, 20, 9, 4}};
 
-//        bestFirstSearch1(&matrix1);
-        BFS1(&matrix1);
-        DFS1(&matrix1);
-//        AStar1(&matrix1);
-
-        cout << endl;
+        testAlgorithms(&matrix1);
 
         vector<vector<int>> matrix2 = {
                 {1, 0, 1, 1, 1, 1, 0, 1, 1, 1},
@@ -44,70 +39,116 @@ public:
                 {1, 1, 1, 0, 0, 0, 1, 0, 0, 1}
         };
 
-//        bestFirstSearch1(&matrix2);
-        BFS1(&matrix2);
-//        DFS1(&matrix2);
-//        AStar1(&matrix2);
+        testAlgorithms(&matrix2);
 
         vector<vector<int>> matrix3 = {
-                {1, 5, 5},
+                {1, 5,  5},
                 {3, 10, 5},
-                {1, 3, 1}
+                {1, 3,  1}
         };
 
-//        AStar1(&matrix3);
+        testAlgorithms(&matrix3);
 
+        vector<vector<int>> matrix4 = {
+                {1, 5, 5},
+                {5, 1, 5},
+                {5, 1, 1}
+        };
+
+        testAlgorithms(&matrix4);
+
+    }
+
+    static void testAlgorithms(vector<vector<int>> *matrix) {
+        SearchableMatrix problem = SearchableMatrix(matrix);
+        cout << problem << endl << endl;
+
+        cout << "===========Best First Search:" << endl;
+        testAlgorithm1(&problem, new BestFirstSearch<Position<int>>());
+        cout << "===========A Star:" << endl;
+        testAlgorithm1(&problem, new AStar<Position<int>>());
+        cout << "===========BFS:" << endl;
+        testAlgorithm1(&problem, new BFS<Position<int>>());
+        cout << "===========DFS:" << endl;
+        testAlgorithm1(&problem, new DFS<Position<int>>());
         cout << endl;
-
-
     }
 
-    static void bestFirstSearch1(vector<vector<int>>* matrix) {
-        SearchableMatrix problem = SearchableMatrix(matrix);
+    static void testAlgorithm1(SearchableMatrix *problem, Searcher<Position<int>> *alg) {
         SearcherSolver<Position<int>>
-                s = SearcherSolver<Position<int >>(new BestFirstSearch<Position<int>>());
+                s = SearcherSolver<Position<int >>(alg);
 
-        Solution<Position<int>> *sol = s.solve(&problem);
+        Solution<Position<int>> *sol = s.solve(problem);
 
-        std::cout << *sol << std::endl;
-        std::cout << sol->getTotalCost() << std::endl;
+        std::cout << "Solution: " << *sol << std::endl;
+        std::cout << "Total cost: " << sol->getTotalCost() << std::endl;
+        std::cout << "Vertices count: " << alg->getCount() << std::endl;
 
         delete (sol);
     }
 
-    static void BFS1(vector<vector<int>>* matrix) {
+    static void bestFirstSearch1(vector<vector<int>> *matrix) {
         SearchableMatrix problem = SearchableMatrix(matrix);
+        Searcher<Position<int>> *searcher = new BestFirstSearch<Position<int>>();
         SearcherSolver<Position<int>>
-                s = SearcherSolver<Position<int >>(new BFS<Position<int>>());
+                s = SearcherSolver<Position<int >>(searcher);
 
         Solution<Position<int>> *sol = s.solve(&problem);
 
         std::cout << *sol << std::endl;
         std::cout << sol->getTotalCost() << std::endl;
+        std::cout << searcher->getCount() << std::endl;
+
         delete (sol);
     }
 
-    static void DFS1(vector<vector<int>>* matrix) {
+    static void BFS1(vector<vector<int>> *matrix) {
         SearchableMatrix problem = SearchableMatrix(matrix);
-        SearcherSolver<Position<int>>
-                s = SearcherSolver<Position<int >>(new DFS<Position<int>>());
+        Searcher<Position<int>> *searcher = new BFS<Position<int>>();
 
+        SearcherSolver<Position<int>>
+                s = SearcherSolver<Position<int >>(searcher);
+
+        int counter = 0;
         Solution<Position<int>> *sol = s.solve(&problem);
+
 
         std::cout << *sol << std::endl;
         std::cout << sol->getTotalCost() << std::endl;
+        std::cout << searcher->getCount() << std::endl;
+
         delete (sol);
     }
 
-    static void AStar1(vector<vector<int>>* matrix) {
+    static void DFS1(vector<vector<int>> *matrix) {
         SearchableMatrix problem = SearchableMatrix(matrix);
+        Searcher<Position<int>> *searcher = new DFS<Position<int>>();
+
         SearcherSolver<Position<int>>
-                s = SearcherSolver<Position<int >>(new AStar<Position<int>>());
+                s = SearcherSolver<Position<int >>(searcher);
 
         Solution<Position<int>> *sol = s.solve(&problem);
 
         std::cout << *sol << std::endl;
         std::cout << sol->getTotalCost() << std::endl;
+        std::cout << searcher->getCount() << std::endl;
+
+        delete (sol);
+    }
+
+    static void AStar1(vector<vector<int>> *matrix) {
+        SearchableMatrix problem = SearchableMatrix(matrix);
+        Searcher<Position<int>> *searcher = new AStar<Position<int>>();
+
+        SearcherSolver<Position<int>>
+                s = SearcherSolver<Position<int >>(searcher);
+
+        Solution<Position<int>> *sol = s.solve(&problem);
+
+        std::cout << *sol << std::endl;
+        std::cout << sol->getTotalCost() << std::endl;
+        std::cout << searcher->getCount() << std::endl;
+
         delete (sol);
     }
 

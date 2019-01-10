@@ -16,6 +16,8 @@ namespace algorithms {
     class Searcher {
     public:
         virtual SearchSolution<T> *search(Searchable<T> *searchable) = 0;
+
+        virtual int getCount() = 0;
     };
 }
 

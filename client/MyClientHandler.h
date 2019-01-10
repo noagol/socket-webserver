@@ -90,12 +90,39 @@ namespace client_side {
                 cacheManager.add(problem, solution);
             }
 
-            if (getsockopt(inputSocket, SOL_SOCKET, SO_ERROR, &error, &len) == 0) {
-                write(inputSocket, "UP", 1); // TODO: Handle directions
+
+            if (solution != nullptr) {
+                vector<State<Position<int>> *> path = solution->getPath();
+                State<Position<int>> *lastPosition = path.at(0);
+                string answer;
+
+                typename vector<State<Position<int>> *>::iterator it1;
+                for (it1 = path.begin() + 1; it1 != path.end(); it1++) {
+                    if (lastPosition->getState().getX() < (*it1)->getState().getX()) {
+                        answer += "Right,";
+                    } else if (lastPosition->getState().getX() > (*it1)->getState().getX()) {
+                        answer += "Left,";
+                    } else if (lastPosition->getState().getY() < (*it1)->getState().getY()) {
+                        answer += "Down,";
+                    } else {
+                        answer += "Up,";
+                    }
+                    lastPosition = *it1;
+                }
+
+
+                if (getsockopt(inputSocket, SOL_SOCKET, SO_ERROR, &error, &len) == 0) {
+                    write(inputSocket, answer.c_str(), answer.size() - 1); // TODO: Handle directions
+                }
+
+            } else {
+                if (getsockopt(inputSocket, SOL_SOCKET, SO_ERROR, &error, &len) == 0) {
+                    write(inputSocket, "-1", 1); // TODO: Handle directions
+                }
             }
 
 
-            delete(searchableMatrix);
+            delete (searchableMatrix);
 
             close(inputSocket);
         }
