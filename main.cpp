@@ -1,5 +1,4 @@
 #include <iostream>
-#include <Expirement.h>
 
 #include "tests/AlgorithmTests.h"
 #include "tests/ServerTests.h"
@@ -31,7 +30,7 @@ int main() {
 //    s.insert(f, state);
 
 
-//    AlgorithmTests::test();
+    AlgorithmTests::test();
 
 
 //    AlgorithmTests::loadTest1();
@@ -40,8 +39,8 @@ int main() {
 //    ServerTests::parallelServer1();
 //    ServerTests::parallelServer2();
 
-    Expirement e = Expirement();
-    e.writeMatricesToFile("graphs.txt");
-    e.run();
+//    Expirement e = Expirement();
+//    e.writeMatricesToFile("graphs.txt");
+//    e.run();
     return 0;
 }

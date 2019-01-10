@@ -9,11 +9,11 @@
 #include <SearchableMatrix.h>
 #include "MatrixGenerator.h"
 #include "Position.h"
-#include "../problem_solver/SearcherSolver.h"
-#include "../algorithm/BestFirstSearch.h"
-#include "../algorithm/BFS.h"
-#include "../algorithm/DFS.h"
-#include "../algorithm/AStar.h"
+#include "SearcherSolver.h"
+#include "BestFirstSearch.h"
+#include "BFS.h"
+#include "DFS.h"
+#include "AStar.h"
 
 #define EPOCHS 10
 

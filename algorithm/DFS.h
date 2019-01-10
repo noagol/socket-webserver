@@ -9,7 +9,6 @@
 #include <stack>
 #include "BaseSearcher.h"
 #include <algorithm>
-#include "../helpers/PointerSet.h"
 #include <map>
 
 using namespace std;
@@ -18,95 +17,110 @@ namespace algorithms {
     template<class StateType>
     class DFS : public BaseSearcher<StateType> {
     public:
-        DFS() : BaseSearcher<StateType>() {}
+        DFS();
 
         /**
         * Search using DFS in a searchable object
         * @param searchable searchable object
         * @return a solution for shortest path in the searchable
         */
-        SearchSolution<StateType> *search(Searchable<StateType> *searchable) override {
-            stack<State<StateType> *> S;
-            Set<StateType, int> d;
-            Set<StateType, StateType> pi;
+        SearchSolution<StateType> *search(Searchable<StateType> *searchable) override;
+    };
 
-            Set<StateType, State<StateType> *> visited;
+    template<class StateType>
+    DFS<StateType>::DFS() : BaseSearcher<StateType>() {}
 
-            this->counter = 0;
+    /**
+    * Search using DFS in a searchable object
+    * @param searchable searchable object
+    * @return a solution for shortest path in the searchable
+    */
+    template<class StateType>
+    SearchSolution<StateType> *DFS<StateType>::search(Searchable<StateType> *searchable) {
+        stack<State<StateType> *> S;
+        Set<StateType, int> d;
+        Set<StateType, StateType> pi;
 
-            // Get the initial vertex
-            State<StateType> *initial = searchable->getInitialState();
-            d.insert(initial->getState(), 0);
+        Set<StateType, State<StateType> *> visited;
 
-            // Add to Queue
-            S.push(initial);
+        this->counter = 0;
 
-            // Initialization
-            State<StateType> *u, *v;
-            vector<State<StateType> *> adj;
-            vector<State<StateType> *> goalStates;
-            typename vector<State<StateType> *>::iterator it;
-            typename map<State<StateType> *, int>::iterator d_it;
+        // Get the initial vertex
+        State<StateType> *initial = searchable->getInitialState();
+        d.insert(initial->getState(), 0);
 
-            // Run until Q is empty
-            while (!S.empty()) {
-                // Pop vertex
-                u = S.top();
-                S.pop();
+        // Add to Queue
+        S.push(initial);
 
-                this->counter++;
+        // Initialization
+        State<StateType> *u, *v;
+        vector<State<StateType> *> adj;
+        vector<State<StateType> *> goalStates;
+        typename vector<State<StateType> *>::iterator it;
+        typename map<State<StateType> *, int>::iterator d_it;
 
-                if (!visited.exists(u->getState())) {
-                    // Set as visited
-                    visited.insert(u->getState(), u);
-                    // Get all adjacent
-                    adj = searchable->getAllPossibleStates(u);
+        // Run until Q is empty
+        while (!S.empty()) {
+            // Pop vertex
+            u = S.top();
+            S.pop();
 
-                    // For each v in adj
-                    for (it = adj.begin(); it != adj.end(); it++) {
-                        v = *it;
-                        this->counter++;
+            this->counter++;
 
-                        // Has not been visited
-                        if (!d.exists(v->getState()) || d.find(v->getState()) > d.find(u->getState()) + v->getCost()) {
-                            d.insert(v->getState(), d.find(u->getState()) + 1);
-                            pi.insert(v->getState(), u->getState());
-                        };
+            if (!visited.exists(u->getState())) {
+                // Set as visited
+                visited.insert(u->getState(), u);
+                // Get all adjacent
+                adj = searchable->getAllPossibleStates(u);
 
-                        S.push(v);
+                // For each v in adj
+                for (it = adj.begin(); it != adj.end(); it++) {
+                    v = *it;
+                    this->counter++;
 
-                        if (searchable->isGoalState(v)) {
-                            goalStates.push_back(v);
-                        }
+                    // Has not been visited
+                    if (!d.exists(v->getState()) || d.find(v->getState()) > d.find(u->getState()) + v->getCost()) {
+                        d.insert(v->getState(), d.find(u->getState()) + 1);
+                        pi.insert(v->getState(), u->getState());
+                    };
+
+                    // Add to stack
+                    S.push(v);
+
+                    // If we reached a goal state
+                    if (searchable->isGoalState(v)) {
+                        goalStates.push_back(v);
                     }
                 }
             }
-
-            if (goalStates.size() == 0) {
-                return nullptr;
-            }
-
-            // Get minimal path to goal state
-            State<StateType> *shortestGoalState = visited.find(goalStates.at(0)->getState());
-
-            for (it = goalStates.begin() + 1; it != goalStates.end(); it++) {
-                if (d.find((*it)->getState()) < d.find(shortestGoalState->getState())) {
-                    shortestGoalState = visited.find((*it)->getState());
-                }
-            }
-
-            StateType parent;
-            State<StateType> *parentState, *currentState = shortestGoalState;
-
-            while (pi.exists(currentState->getState())) {
-                parent = pi.find(currentState->getState());
-                parentState = visited.find(parent);
-                currentState->setParent(parentState);
-                currentState = parentState;
-            }
-
-            return this->getSolutionPath(shortestGoalState);
         }
-    };
+
+        // No goal state reached
+        if (goalStates.size() == 0) {
+            return nullptr;
+        }
+
+        // Get minimal path to goal state
+        State<StateType> *shortestGoalState = visited.find(goalStates.at(0)->getState());
+
+        for (it = goalStates.begin() + 1; it != goalStates.end(); it++) {
+            if (d.find((*it)->getState()) < d.find(shortestGoalState->getState())) {
+                shortestGoalState = visited.find((*it)->getState());
+            }
+        }
+
+        // Retrieve solution path
+        StateType parent;
+        State<StateType> *parentState, *currentState = shortestGoalState;
+
+        while (pi.exists(currentState->getState())) {
+            parent = pi.find(currentState->getState());
+            parentState = visited.find(parent);
+            currentState->setParent(parentState);
+            currentState = parentState;
+        }
+
+        return this->getSolutionPath(shortestGoalState);
+    }
 }
 #endif //SERVER_SIDE_PROJECT_DFS_H

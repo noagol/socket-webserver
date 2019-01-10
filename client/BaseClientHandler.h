@@ -10,7 +10,9 @@
 namespace client_side {
     class BaseClientHandler : public ClientHandler {
     public:
-        BaseClientHandler() {}
+        BaseClientHandler();
+
+        string readValuesToBuffer(int socket);
     };
 }
 

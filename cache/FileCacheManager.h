@@ -42,32 +42,56 @@ public:
 };
 
 
+/**
+ * Cache manager that saves to file
+ * @tparam Solution solution type
+ * @param file_path path to cache file
+ */
 template<class Solution>
 FileCacheManager<Solution>::FileCacheManager(string file_path) : filename(file_path) {}
 
+/**
+ * Add problem and solution to cache
+ * @tparam Solution solution type
+ * @param problem key string
+ * @param solution solution pointer
+ */
 template<class Solution>
 void FileCacheManager<Solution>::add(string &problem, Solution *solution) {
     lock_guard<mutex> l(lock);
     dbNew[problem] = solution;
 }
 
+/**
+ * Save new entries to file
+ * @tparam Solution type
+ */
 template<class Solution>
 void FileCacheManager<Solution>::save() {
     // Open file
     ofstream outfile;
     outfile.open(filename, ios::app);
 
+    // Check if file is opened well
     if (!outfile.is_open()) {
         throw runtime_error("Unable to open file");
     }
 
+    // Write to file each entry
     for (auto const &x : dbNew) {
         outfile << x.first << '\t' << *x.second << endl;
     }
 
+    // Close file
     outfile.close();
 }
 
+/**
+ * Find a solution by a problem
+ * @tparam Solution type
+ * @param problemStr problem represented in a string
+ * @return solution pointer. null if there is no solution in cache
+ */
 template<class Solution>
 Solution *FileCacheManager<Solution>::find(string &problemStr) {
     lock_guard<mutex> l(lock);
@@ -120,11 +144,15 @@ Solution *FileCacheManager<Solution>::find(string &problemStr) {
     }
 
     infile.close();
-    // Customer no found
+    // Solution not found
     return nullptr;
 }
 
 
+/**
+ * Save and free alocated memory
+ * @tparam Solution type
+ */
 template<class Solution>
 FileCacheManager<Solution>::~FileCacheManager() {
     save();
