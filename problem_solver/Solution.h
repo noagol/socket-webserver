@@ -23,10 +23,7 @@ namespace problem_solver {
         virtual int getTotalCost() const = 0;
 
         template<class V>
-        friend ostream &operator<<(ostream &os, const Solution<V> &solution) {
-            solution.print(os); // delegate the work to a polymorphic member function.
-            return os;
-        }
+        friend ostream &operator<<(ostream &os, const Solution<V> &solution);
 
         virtual ~Solution() {}
 

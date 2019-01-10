@@ -28,7 +28,7 @@ void server_side::MyParallelServer::stop() {
  */
 void server_side::MyParallelServer::runThread(int clientSocket, ClientHandler *clientHandler) {
     // Run a thread to handle client
-    clientHandler->handleClient(clientSocket, cout);
+    clientHandler->handleClient(clientSocket);
 
     // Close the socket
     if (clientSocket) {

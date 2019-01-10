@@ -64,7 +64,7 @@ namespace server_side {
 
             // Client handler
             try {
-                clientHandler->handleClient(newsockfd, cout);
+                clientHandler->handleClient(newsockfd);
             } catch (exception &ex) {
                 cout << ex.what() << endl;
             }

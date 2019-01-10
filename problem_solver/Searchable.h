@@ -23,10 +23,7 @@ namespace problem_solver {
         virtual vector<State < T>*>getAllPossibleStates(State<T>* state) = 0;
 
         template<class V>
-        friend ostream &operator<<(ostream &os, const Searchable<V> &searchable) {
-            searchable.print(os); // delegate the work to a polymorphic member function.
-            return os;
-        }
+        friend ostream &operator<<(ostream &os, const Searchable<V> &searchable);
     protected:
         virtual void print(ostream &o) const = 0;
     };
