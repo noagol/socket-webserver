@@ -9,7 +9,7 @@
 #include <queue>
 #include "BaseSearcher.h"
 #include <algorithm>
-#include <Set.h>
+#include "../helpers/Set.h"
 
 using namespace std;
 

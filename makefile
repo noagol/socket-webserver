@@ -1,2 +1,2 @@
 all:
-	g++ -std=c++14 -pthread ./*/*.h ./*/*.cpp ./*/*/*.h ./*/*/*.cpp ./main.cpp
+	g++ -std=c++14 -pthread ./*/*.h ./*/*.cpp ./main.cpp

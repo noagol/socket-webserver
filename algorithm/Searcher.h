@@ -5,7 +5,7 @@
 #ifndef SERVER_SIDE_PROJECT_ALGORITHM_H
 #define SERVER_SIDE_PROJECT_ALGORITHM_H
 
-#include <SearchSolution.h>
+#include "../problem_solver/SearchSolution.h"
 #include "../problem_solver/Solution.h"
 #include "../problem_solver/Searchable.h"
 

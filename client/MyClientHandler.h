@@ -1,7 +1,3 @@
-//
-// Created by EB on 08/01/2019.
-//
-
 #ifndef SERVER_SIDE_PROJECT_MYCLIENTHANDLER_H
 #define SERVER_SIDE_PROJECT_MYCLIENTHANDLER_H
 
@@ -9,7 +5,7 @@
 #include "../problem_solver/Solver.h"
 #include "../cache/FileCacheManager.h"
 #include <sys/socket.h>
-#include <SearchableMatrix.h>
+#include "../problem_solver/SearchableMatrix.h"
 #include "../helpers/StringHelpers.h"
 #include "../problem_solver/SearchSolution.h"
 

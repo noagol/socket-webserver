@@ -53,13 +53,19 @@ public:
 
         MyParallelServer *server = new MyParallelServer();
         server->open(12346, clientHandler);
-        this_thread::sleep_for(std::chrono::milliseconds((unsigned int) 60000));
 
+        cout << "Sleep start" << endl;
+        this_thread::sleep_for(std::chrono::milliseconds((unsigned int) 15000));
+
+        cout << "Stop start" << endl;
         server->stop();
 
+        cout << "delete start" << endl;
         delete (server);
         delete (clientHandler);
-        this_thread::sleep_for(std::chrono::milliseconds((unsigned int) 200000000000000000));
+
+        cout << "END" << endl;
+
     }
 };
 

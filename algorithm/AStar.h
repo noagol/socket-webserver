@@ -8,7 +8,7 @@
 #include "BaseSearcher.h"
 #include <map>
 #include <queue>
-#include <Set.h>
+#include "../helpers/Set.h"
 
 namespace algorithms {
     template<class StateType>

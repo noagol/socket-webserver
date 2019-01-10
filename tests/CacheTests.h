@@ -9,15 +9,15 @@
 
 class CacheTests {
     static void simpleTask() {
-        FileCacheManager<string> cm = FileCacheManager<string>("test.txt");
-        string a = "elad";
-        string *b = new string("test");
-
-        cm.add(a, b);
-
-        string *search = cm.find(a);
-
-        cout << *search << endl;
+//        FileCacheManager<string> cm = FileCacheManager<string>("test.txt");
+//        string a = "elad";
+//        string *b = new string("test");
+//
+//        cm.add(a, b);
+//
+//        string *search = cm.find(a);
+//
+//        cout << *search << endl;
     }
 };
 

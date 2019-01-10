@@ -20,6 +20,7 @@ using namespace std;
 namespace server_side {
     class MyParallelServer : public BaseServer {
         static bool shouldStop;
+        static vector<thread*> threads;
     public:
         MyParallelServer() ;
 

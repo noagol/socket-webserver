@@ -10,8 +10,9 @@ server_side::MyParallelServer::MyParallelServer() : BaseServer() {}
 */
 void server_side::MyParallelServer::run(int port, ClientHandler *clientHandler) {
     // Run the server in new thread
-    thread serverThread(runServer, port, clientHandler);
-    serverThread.detach();
+    thread *serverThread = new thread(runServer, port, clientHandler);
+    threads.push_back(serverThread);
+//    serverThread.detach();
 }
 
 /**
@@ -19,6 +20,13 @@ void server_side::MyParallelServer::run(int port, ClientHandler *clientHandler) 
  */
 void server_side::MyParallelServer::stop() {
     shouldStop = true;
+
+    typename vector<thread *>::iterator it;
+    for (it = threads.begin(); it != threads.end(); it++) {
+        (*it)->join();
+        delete (*it);
+    }
+
 }
 
 /**
@@ -42,10 +50,8 @@ void server_side::MyParallelServer::runThread(int clientSocket, ClientHandler *c
  * @param clientHandler client handler
  */
 void server_side::MyParallelServer::runServer(int port, ClientHandler *clientHandler) {
-    int sockfd, newsockfd, portno, clilen;
-    char buffer[1024];
+    int sockfd, newsockfd, clilen;
     struct sockaddr_in serv_addr, cli_addr;
-    int n;
 
     // First call to socket() function
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -57,7 +63,7 @@ void server_side::MyParallelServer::runServer(int port, ClientHandler *clientHan
 
     // Set timeout
     struct timeval tv;
-    tv.tv_sec = 150;  /* 150 Secs Timeout */
+    tv.tv_sec = 30;  /* 30 Secs Timeout */
     setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (struct timeval *) &tv, sizeof(struct timeval));
 
 
@@ -81,7 +87,7 @@ void server_side::MyParallelServer::runServer(int port, ClientHandler *clientHan
     listen(sockfd, 100);
     clilen = sizeof(cli_addr);
 
-    thread clientThread;
+    thread *clientThread;
     // Update variables
     while (!shouldStop) {
         // Accept actual connection from the client
@@ -92,8 +98,8 @@ void server_side::MyParallelServer::runServer(int port, ClientHandler *clientHan
             continue;
         }
 
-        clientThread = thread(runThread, newsockfd, clientHandler);
-        clientThread.detach();
+        clientThread = new thread(runThread, newsockfd, clientHandler);
+        MyParallelServer::threads.push_back(clientThread);
     }
 
     close(sockfd);
@@ -101,3 +107,4 @@ void server_side::MyParallelServer::runServer(int port, ClientHandler *clientHan
 
 bool server_side::MyParallelServer::shouldStop = false;
 
+vector<thread*> server_side::MyParallelServer::threads = vector<thread*>();
