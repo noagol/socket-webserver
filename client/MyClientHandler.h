@@ -22,7 +22,7 @@ namespace client_side {
 
         void handleClient(int inputSocket) override;
 
-        Position<int> readPosition(int inputSocket);
+        Position<int> readPosition(string& position);
 
         string getPathMovements(SearchSolution<Position<int>> *solution);
 

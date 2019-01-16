@@ -22,7 +22,8 @@ namespace client_side {
 
         vector<vector<int>> matrix;
         vector<string> spl;
-        typename vector<string>::iterator it;
+        vector<string> lines;
+        typename vector<string>::iterator it1, it2;
         vector<int> row;
 
         // To check socket status
@@ -48,21 +49,28 @@ namespace client_side {
                 }
             }
 
-            // Add row to matrix
-            row = vector<int>();
-            spl = split(&problem, ',');
-            for (it = spl.begin(); it != spl.end(); it++) {
-                row.push_back(stoi(*it));
-            }
-            matrix.push_back(row);
+            // Add to lines vector
+            lines.push_back(problem);
 
             // Read another line
             problem = readValuesToBuffer(inputSocket);
         } while (problem != "end");
 
+
+        // Cast each row in the matrix
+        for (it1 = lines.begin(); it1 != lines.end() - 2; it1++) {
+            // Add row to matrix
+            row = vector<int>();
+            spl = split(&(*it1), ',');
+            for (it2 = spl.begin(); it2 != spl.end(); it2++) {
+                row.push_back(stoi(*it2));
+            }
+            matrix.push_back(row);
+        }
+
         // Get initial and goal position
-        initial = readPosition(inputSocket);
-        goal = readPosition(inputSocket);
+        initial = readPosition(*it1);
+        goal = readPosition(*(it1+1));
 
         // Create the matrix object
         SearchableMatrix *searchableMatrix = new SearchableMatrix(&matrix, initial, goal);
@@ -134,22 +142,12 @@ namespace client_side {
      * @param inputSocket input socket
      * @return position
      */
-    Position<int> MyClientHandler::readPosition(int inputSocket) {
-        // To check socket status
-        int error = 0;
-        socklen_t len = sizeof(error);
-
+    Position<int> MyClientHandler::readPosition(string &position) {
         // Get postion
-        string position;
         vector<string> spl;
 
-        if (getsockopt(inputSocket, SOL_SOCKET, SO_ERROR, &error, &len) == 0) {
-            position = readValuesToBuffer(inputSocket);
-            spl = split(&position, ',');
-            return {stoi(spl.at(0)), stoi(spl.at(1))};
-        } else {
-            throw invalid_argument("Socket connection was interrupted");
-        }
+        spl = split(&position, ',');
+        return {stoi(spl.at(1)), stoi(spl.at(0))};
     }
 
     /**

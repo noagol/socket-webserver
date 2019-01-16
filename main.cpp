@@ -21,9 +21,8 @@ int main(int argc, char **argv) {
     MyParallelServer *server = new MyParallelServer();
     server->open(atoi(argv[1]), clientHandler);
 
-    char c;
-    cout << "Press [ENTER] when you want to stop the server";
-    scanf("%c", &c);
+    // Wait for all threads to finish
+    MyParallelServer::joinMainThreads();
 
     cout << "Terminating the server" << endl;
     // Stop running threads

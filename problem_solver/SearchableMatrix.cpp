@@ -177,6 +177,12 @@ namespace problem_solver {
         }
         os << *it2;
 
+        // Write initial and goal state
+        Position<int> init = searchable.initialState->getState();
+        Position<int> goal = searchable.goalState->getState();
+
+        os << "^" << init << "|" << goal;
+
         return os;
     }
 
@@ -190,8 +196,12 @@ namespace problem_solver {
         string input;
         os >> input;
 
+        vector<string> rowsAndPositions = split(&input, '^');
+
         // Split
-        vector<string> rows = split(&input, '|');
+        vector<string> rows = split(&rowsAndPositions.at(0), '|');
+        vector<string> positions = split(&rowsAndPositions.at(1), '|');
+
         vector<string> row;
         string rowStr;
 
@@ -208,13 +218,19 @@ namespace problem_solver {
         }
 
         // Set goal and initial states
-        searchable.goalState = new State<Position<int>>(
-                Position<int>(searchable.matrix.at(0).size() - 1, searchable.matrix.size() - 1),
-                searchable.matrix.at(searchable.matrix.size() - 1).at(searchable.matrix.at(0).size() - 1),
-                nullptr);
-        searchable.initialState = new State<Position<int>>(Position<int>(0, 0),
-                                                           searchable.matrix.at(0).at(0),
+        Position<int> initial;
+        Position<int> goal;
+        istringstream isInit{positions.at(0)};
+        istringstream isGoal{positions.at(1)};
+        isInit >> initial;
+        isGoal >> goal;
+
+        searchable.initialState = new State<Position<int>>(initial,
+                                                           searchable.matrix.at(initial.getY()).at(initial.getX()),
                                                            nullptr);
+        searchable.goalState = new State<Position<int>>(goal,
+                                                        searchable.matrix.at(goal.getY()).at(goal.getX()),
+                                                        nullptr);
         searchable.updateAverageWeight();
 
         // Add to allocated memory

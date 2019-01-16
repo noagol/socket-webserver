@@ -11,22 +11,49 @@ server_side::MyParallelServer::MyParallelServer() : BaseServer() {}
 void server_side::MyParallelServer::run(int port, ClientHandler *clientHandler) {
     // Run the server in new thread
     thread *serverThread = new thread(runServer, port, clientHandler);
-    threads.push_back(serverThread);
-//    serverThread.detach();
+    mainThreads.push_back(serverThread);
 }
 
 /**
- * stop server
+ * Stop server
  */
 void server_side::MyParallelServer::stop() {
     shouldStop = true;
 
     typename vector<thread *>::iterator it;
     for (it = threads.begin(); it != threads.end(); it++) {
-        (*it)->join();
+        if ((*it)->joinable()) {
+            (*it)->join();
+        }
         delete (*it);
     }
 
+    for (it = mainThreads.begin(); it != mainThreads.end(); it++) {
+        if ((*it)->joinable()) {
+            (*it)->join();
+        }
+        delete (*it);
+    }
+}
+
+/**
+ * Join all threads
+ */
+void server_side::MyParallelServer::joinClientThreads() {
+    typename vector<thread *>::iterator it;
+    for (it = threads.begin(); it != threads.end(); it++) {
+        (*it)->join();
+    }
+}
+
+/**
+ * Join all threads
+ */
+void server_side::MyParallelServer::joinMainThreads() {
+    typename vector<thread *>::iterator it;
+    for (it = mainThreads.begin(); it != mainThreads.end(); it++) {
+        (*it)->join();
+    }
 }
 
 /**
@@ -61,12 +88,6 @@ void server_side::MyParallelServer::runServer(int port, ClientHandler *clientHan
         exit(1);
     }
 
-    // Set timeout
-    struct timeval tv;
-    tv.tv_sec = 30;  /* 30 Secs Timeout */
-    setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (struct timeval *) &tv, sizeof(struct timeval));
-
-
     // Initialize socket structure
     bzero((char *) &serv_addr, sizeof(serv_addr));
 
@@ -84,10 +105,24 @@ void server_side::MyParallelServer::runServer(int port, ClientHandler *clientHan
     /** Now start listening for the clients, here process will
     go in sleep mode and will wait for the incoming connection
     **/
-    listen(sockfd, 100);
+    listen(sockfd, SOMAXCONN);
     clilen = sizeof(cli_addr);
 
     thread *clientThread;
+
+    // Accept first client
+    newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, (socklen_t *) &clilen);
+    if (newsockfd != -1) {
+        // No one accepted
+        clientThread = new thread(runThread, newsockfd, clientHandler);
+        MyParallelServer::threads.push_back(clientThread);
+    }
+
+    // Set timeout
+    struct timeval tv;
+    tv.tv_sec = 1;  /* 1 Secs Timeout */
+    setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (struct timeval *) &tv, sizeof(struct timeval));
+
     // Update variables
     while (!shouldStop) {
         // Accept actual connection from the client
@@ -95,16 +130,22 @@ void server_side::MyParallelServer::runServer(int port, ClientHandler *clientHan
 
         if (newsockfd == -1) {
             // No one accepted
-            continue;
+            break;
         }
 
+        // Handle client
         clientThread = new thread(runThread, newsockfd, clientHandler);
         MyParallelServer::threads.push_back(clientThread);
     }
 
+    // Wait for client threads
+    joinClientThreads();
+
+    // Close the socket
     close(sockfd);
 }
 
 bool server_side::MyParallelServer::shouldStop = false;
 
-vector<thread*> server_side::MyParallelServer::threads = vector<thread*>();
+vector<thread *> server_side::MyParallelServer::threads = vector<thread *>();
+vector<thread *> server_side::MyParallelServer::mainThreads = vector<thread *>();

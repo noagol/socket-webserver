@@ -20,20 +20,24 @@ using namespace std;
 namespace server_side {
     class MyParallelServer : public BaseServer {
         static bool shouldStop;
-        static vector<thread*> threads;
+        static vector<thread *> threads;
+        static vector<thread *> mainThreads;
     public:
-        MyParallelServer() ;
+        MyParallelServer();
 
         void run(int port, ClientHandler *clientHandler) override;
 
-        void stop() override ;
+        void stop() override;
 
-        static void runThread(int clientSocket, ClientHandler *clientHandler) ;
+        static void joinClientThreads();
 
-        static void runServer(int port, ClientHandler *clientHandler) ;
+        static void joinMainThreads();
+
+        static void runThread(int clientSocket, ClientHandler *clientHandler);
+
+        static void runServer(int port, ClientHandler *clientHandler);
     };
 }
-
 
 
 #endif //SERVER_SIDE_PROJECT_MYPARALLELSERVER_H
